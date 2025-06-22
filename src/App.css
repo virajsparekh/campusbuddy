@@ -1,0 +1,72 @@
+/* Basic container */
+.app-container {
+  padding: 20px;
+}
+
+/* Centered heading */
+.main-title {
+  font-size: 100px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Button aligned to the right */
+.button-section {
+  text-align: right;
+  margin-top: 10px;
+}
+
+/* Back button */
+.back-btn {
+  margin-bottom: 20px;
+}
+
+/* Section title (Q&A) */
+.section-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* General button style */
+button {
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid #888;
+  background-color: #f0f0f0;
+  color: #333;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #ddd;
+}
+
+/* Vote buttons */
+.vote-button {
+  font-size: 18px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  margin-right: 5px;
+}
+.vote-button:hover {
+  color: #007bff;
+}
+
+/* Question card */
+.question-card {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
