@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import BrowseMaterials from './BrowseMaterials'
-// import UploadMaterials from './UploadMaterials'
-// import MyUploads from './MyUploads'
+import UploadMaterials from './UploadMaterials'
+import MyUploads from './MyUploads'
 
 export default function StudyHub({ onBack }) {
   const [tab, setTab] = useState(null)
@@ -13,8 +13,8 @@ export default function StudyHub({ onBack }) {
         <h2 className="studyhub-heading">📘 Study Hub</h2>
         <div className="tab-button-container">
           <button onClick={() => setTab('browse')} className="tab-button">Browse Materials</button>
-          {/* <button onClick={() => setTab('upload')} className="tab-button">Upload Materials</button>
-          <button onClick={() => setTab('myuploads')} className="tab-button">My Uploads</button> */}
+          <button onClick={() => setTab('upload')} className="tab-button">Upload Materials</button>
+          <button onClick={() => setTab('myuploads')} className="tab-button">My Uploads</button>
         </div>
       </div>
     )
@@ -24,8 +24,8 @@ export default function StudyHub({ onBack }) {
     <div>
       <button onClick={() => setTab(null)} className="back-button">← Back to Study Hub</button>
       {tab === 'browse' && <BrowseMaterials />}
-      {/* {tab === 'upload' && <UploadMaterials />}
-      {tab === 'myuploads' && <MyUploads />} */}
+      {tab === 'upload' && <UploadMaterials />}
+      {tab === 'myuploads' && <MyUploads />}
     </div>
   )
 }
