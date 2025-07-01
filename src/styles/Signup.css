@@ -1,0 +1,128 @@
+:root {
+  --cb-primary: #2563EB;
+  --cb-primary-hover: #3B82F6;
+  --cb-secondary: #F59E0B;
+  --cb-success: #10B981;
+  --cb-bg: #F1F5F9;
+  --cb-text-main: #111827;
+  --cb-text-subtle: #6B7280;
+  --cb-border: #E5E7EB;
+  --cb-light-blue: #DBEAFE;
+  --cb-emerald: #34D399;
+  --cb-rose: #F43F5E;
+  --cb-violet: #8B5CF6;
+}
+
+body, html {
+  font-family: 'Inter', 'Roboto', 'Nunito', 'Open Sans', Arial, sans-serif;
+  background: var(--cb-bg);
+  color: var(--cb-text-main);
+}
+
+.signup-bg {
+  min-height: 100vh;
+  width: 100vw;
+  background: linear-gradient(120deg, var(--cb-light-blue) 0%, var(--cb-bg) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signup-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 2rem;
+  box-shadow: 0 8px 32px 0 rgba(37, 99, 235, 0.10);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 2.5rem 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--cb-border);
+}
+
+.glass {
+  background: rgba(255,255,255,0.7);
+  box-shadow: 0 8px 32px 0 rgba(37, 99, 235, 0.10);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--cb-border);
+}
+
+.signup-logo img {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.signup-title {
+  font-family: 'Inter', 'Poppins', Arial, sans-serif;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--cb-text-main);
+  letter-spacing: 0.5px;
+}
+
+.signup-form {
+  width: 100%;
+}
+
+.signup-form .MuiTextField-root {
+  margin-bottom: 1.2rem;
+}
+
+.signup-links {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.signup-links a {
+  color: var(--cb-primary);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.signup-links a:hover {
+  color: var(--cb-primary-hover);
+}
+
+.signup-btn {
+  margin-top: 1.5rem;
+  font-weight: 600;
+  background: linear-gradient(90deg, var(--cb-primary) 0%, var(--cb-primary-hover) 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.12);
+  border-radius: 8px;
+  transition: background 0.2s, box-shadow 0.2s;
+  border: none;
+}
+
+.signup-btn:hover {
+  background: linear-gradient(90deg, var(--cb-primary-hover) 0%, var(--cb-primary) 100%);
+  box-shadow: 0 4px 16px rgba(37,99,235,0.18);
+}
+
+.MuiInputBase-root, .MuiOutlinedInput-root {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid var(--cb-border);
+}
+
+.MuiInputLabel-root {
+  color: var(--cb-text-subtle);
+}
+
+.MuiFormHelperText-root {
+  color: var(--cb-rose);
+}
+
+@media (max-width: 600px) {
+  .signup-card {
+    padding: 1.5rem 0.5rem;
+    border-radius: 1rem;
+  }
+} 
