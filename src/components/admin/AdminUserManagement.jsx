@@ -21,8 +21,7 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
+import AdminSidebar from './AdminSidebar'; 
 
 const demoUsers = [
   { id: 1, name: 'Alice Smith', email: 'alice@campusbuddy.com', role: 'student', college: 'Sample College' },
@@ -58,111 +57,98 @@ export default function AdminUserManagement() {
   };
 
   return (
-    <Box
-      sx={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        minHeight: '100vh',
-        width: '100vw',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <Header />
-      <Container maxWidth="md" sx={{ py: 6, flex: 1 }}>
-        <Paper sx={{ p: 4, borderRadius: 4, boxShadow: 3 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-            <Typography variant="h4" fontWeight={700} color="#2563EB">
-              User Management
-            </Typography>
-            <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpen()}>
-              Create User
-            </Button>
-          </Box>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Role</TableCell>
-                  <TableCell>College</TableCell>
-                  <TableCell align="right">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {users.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.role}</TableCell>
-                    <TableCell>{user.college}</TableCell>
-                    <TableCell align="right">
-                      <IconButton onClick={() => handleOpen(user)}>
-                        <EditIcon />
-                      </IconButton>
-                    </TableCell>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f3f4f6', width: '100vw' }}>
+      <AdminSidebar />
+      <Box sx={{ flex: 1, p: 4 }}>
+        <Container maxWidth="md">
+          <Paper sx={{ p: 4, borderRadius: 4, boxShadow: 3 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h4" fontWeight={700} color="#2563EB">
+                User Management
+              </Typography>
+              <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpen()}>
+                Create User
+              </Button>
+            </Box>
+
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Role</TableCell>
+                    <TableCell>College</TableCell>
+                    <TableCell align="right">Actions</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-      </Container>
+                </TableHead>
+                <TableBody>
+                  {users.map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell>{user.name}</TableCell>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell>{user.role}</TableCell>
+                      <TableCell>{user.college}</TableCell>
+                      <TableCell align="right">
+                        <IconButton onClick={() => handleOpen(user)}>
+                          <EditIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        </Container>
 
-      <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
-        <DialogTitle>{editUser ? 'Edit User' : 'Create User'}</DialogTitle>
-        <DialogContent>
-          <Stack spacing={2} mt={1}>
-            <TextField
-              label="Name"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-            <TextField
-              label="Email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              fullWidth
-              required
-              disabled={!!editUser}
-            />
-            <TextField
-              label="Role"
-              name="role"
-              value={form.role}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-            <TextField
-              label="College"
-              name="college"
-              value={form.college}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSave} variant="contained">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Footer
-        sx={{
-          textAlign: 'center',
-          py: 2,
-          backgroundColor: '#f5f5f5',
-        }}
-      />
+        <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+          <DialogTitle>{editUser ? 'Edit User' : 'Create User'}</DialogTitle>
+          <DialogContent>
+            <Stack spacing={2} mt={1}>
+              <TextField
+                label="Name"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                fullWidth
+                required
+              />
+              <TextField
+                label="Email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                fullWidth
+                required
+                disabled={!!editUser}
+              />
+              <TextField
+                label="Role"
+                name="role"
+                value={form.role}
+                onChange={handleChange}
+                fullWidth
+                required
+              />
+              <TextField
+                label="College"
+                name="college"
+                value={form.college}
+                onChange={handleChange}
+                fullWidth
+                required
+              />
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleSave} variant="contained">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
     </Box>
   );
 }

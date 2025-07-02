@@ -85,7 +85,7 @@ export default function PrivacyPolicy() {
           }}>
             <Box sx={{ p: 4, background: '#f8fafc' }}>
               <Typography variant="h5" fontWeight={600} color="#1e293b" mb={1}>
-                Last Updated: December 2024
+                Last Updated: June 2025
               </Typography>
               <Typography variant="body1" color="#64748b">
                 This Privacy Policy describes how CampusBuddy collects, uses, and protects your personal information when you use our platform.

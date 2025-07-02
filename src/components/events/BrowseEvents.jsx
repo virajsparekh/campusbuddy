@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Box, Typography, Paper, Chip, Stack, Avatar, Grid } from '@mui/material';
+import { Box, Typography, Paper, Chip, Stack, Avatar, Grid, Button } from '@mui/material';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import StarIcon from '@mui/icons-material/Star';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import Header from '../common/Header';
+import { Link as RouterLink } from 'react-router-dom';
 
 const demoEvents = [
   {
@@ -134,7 +135,9 @@ export default function BrowseEvents() {
               Events
             </Typography>
           </Box>
-          <Chip icon={<StarIcon />} label="Premium Only" color="warning" sx={{ fontWeight: 600, fontSize: 15, px: 1.5, py: 0.5, borderRadius: 2, height: 32 }} size="medium" />
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Chip icon={<StarIcon />} label="Premium Only" color="warning" sx={{ fontWeight: 600, fontSize: 15, px: 1.5, py: 0.5, borderRadius: 2, height: 32 }} size="medium" />
+          </Stack>
         </Stack>
         {/* Tag filter bar */}
         <Stack direction="row" spacing={1} mb={4} flexWrap="wrap" alignItems="center">

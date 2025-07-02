@@ -79,7 +79,7 @@ export default function TermsOfService() {
           }}>
             <Box sx={{ p: 4, background: '#f8fafc' }}>
               <Typography variant="h5" fontWeight={600} color="#1e293b" mb={1}>
-                Last Updated: December 2024
+                Last Updated: June 2025
               </Typography>
               <Typography variant="body1" color="#64748b">
                 These Terms of Service govern your use of CampusBuddy and constitute a legally binding agreement between you and CampusBuddy.

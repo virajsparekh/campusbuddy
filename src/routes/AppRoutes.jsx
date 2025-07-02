@@ -27,6 +27,8 @@ import TermsOfService from '../components/support/TermsOfService';
 import PrivacyPolicy from '../components/support/PrivacyPolicy';
 import AdminPostEvent from '../components/admin/AdminPostEvent';
 import AdminUserManagement from '../components/admin/AdminUserManagement';
+import AdminDashboard from '../components/admin/AdminDashboard';
+import SubscriptionPage from '../components/subscription/SubscriptionPage';
 
 function AppRoutes() {
   return (
@@ -62,6 +64,8 @@ function AppRoutes() {
             <Route path="/support/privacy" element={<PrivacyPolicy />} />
             <Route path="/admin/post-event" element={<AdminPostEvent />} />
             <Route path="/admin/users" element={<AdminUserManagement />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/subscription" element={<SubscriptionPage />} />
             {/* Add other routes here */}
           </Routes>
         </Box>
