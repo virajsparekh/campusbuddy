@@ -1,0 +1,168 @@
+/* Common styles for Study Hub */
+.app-container {
+  background-color: white;
+  min-height: 100vh;
+  padding: 1rem;
+  color: #212529;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+.button-wrapper {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 2rem;
+}
+
+.back-button {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}
+
+.tab-button-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.tab-button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tab-button:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+  color: white;
+}
+
+/* BrowseMaterials */
+.tag-filter-container {
+  margin-bottom: 1rem;
+}
+
+.tag-button {
+  margin-right: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid #007bff;
+  background-color: white;
+  color: #007bff;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.tag-button-active {
+  background-color: #007bff;
+  color: white;
+}
+
+.materials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+  gap: 1rem;
+}
+
+.material-card {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+/* UploadMaterials */
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.file-picker-label {
+  cursor: pointer;
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.file-input {
+  display: block;
+}
+
+.file-preview {
+  margin-top: 1rem;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 200px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+/* MyUploads */
+.uploads-list {
+  list-style: none;
+  padding: 0;
+}
+
+.upload-item {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+.upload-actions button {
+  margin-left: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-button {
+  background-color: #ffc107;
+  color: black;
+}
+
+.edit-button:hover {
+  background-color: #e0a800;
+}
+
+.remove-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.remove-button:hover {
+  background-color: #c82333;
+}
