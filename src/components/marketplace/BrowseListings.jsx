@@ -136,21 +136,23 @@ export default function BrowseListings() {
         </List>
         <Divider sx={{ my: 2 }} />
         <Button
+          component={RouterLink}
+          to="/marketplace/post"
           variant="contained"
           color="primary"
           startIcon={<AddCircleOutlineIcon />}
           fullWidth
           sx={{ fontWeight: 700, borderRadius: 2, mb: 1 }}
-          onClick={() => window.location.href = '/marketplace/post'}
         >
           Create new listing
         </Button>
         <Button
+          component={RouterLink}
+          to="/marketplace/mylistings"
           variant="outlined"
           color="primary"
           fullWidth
           sx={{ fontWeight: 700, borderRadius: 2 }}
-          onClick={() => window.location.href = '/marketplace/mylistings'}
         >
           My Listings
         </Button>
