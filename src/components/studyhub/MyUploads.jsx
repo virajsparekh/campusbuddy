@@ -1,45 +1,57 @@
-import { useState } from 'react'
+import React from 'react';
+import { Box, Card, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Avatar } from '@mui/material';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import Header from '../common/Header';
+import Footer from '../common/Footer';
 
-const mockUploads = [
-  { id: 1, title: 'Big Data Notes', subject: 'CS101', uploader: 'You', tags: ['Big Data', 'Lecture'] },
-  { id: 2, title: 'Math Formulas', subject: 'MATH203', uploader: 'You', tags: ['Math', 'Exam'] },
-]
+const demoUploads = [
+  { file: 'road.jpeg', type: 'IMG', subject: 'Physics', college: 'ABC University', url: '#' },
+  { file: 'notes.pdf', type: 'PDF', subject: 'Math', college: 'XYZ College', url: '#' },
+];
 
 export default function MyUploads() {
-  const [uploads, setUploads] = useState(mockUploads)
-
-  const handleRemove = (id) => {
-    // Mock removal: filter out the upload with the given id
-    setUploads(uploads.filter(upload => upload.id !== id))
-  }
-
-  const handleEdit = (id) => {
-    // Mock edit: alert for now
-    alert(`Edit functionality for upload id ${id} is not implemented yet.`)
-  }
-
   return (
-    <div className="my-uploads-container">
-      <h2 className="my-uploads-heading">📤 My Uploads</h2>
-      {uploads.length === 0 ? (
-        <p>No uploads found.</p>
-      ) : (
-        <ul className="uploads-list">
-          {uploads.map(upload => (
-            <li key={upload.id} className="upload-item">
-              <div className="upload-info">
-                <h4>{upload.title}</h4>
-                <p><strong>Subject:</strong> {upload.subject}</p>
-                <p><strong>Tags:</strong> {upload.tags.join(', ')}</p>
-              </div>
-              <div className="upload-actions">
-                <button onClick={() => handleEdit(upload.id)} className="edit-button">Edit</button>
-                <button onClick={() => handleRemove(upload.id)} className="remove-button">Remove</button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  )
-}
+    <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--cb-bg, #F1F5F9)', zIndex: 1 }}>
+      <Header />
+      <Card sx={{ width: '100%', maxWidth: 900, borderRadius: 4, boxShadow: 6, p: 5 }}>
+        <Typography variant="h6" fontWeight={700} color="#2563EB" mb={2}>
+          My Uploaded Materials
+        </Typography>
+        <TableContainer sx={{ p: 2 }}>
+          <Table>
+            <TableHead >
+              <TableRow sx={{ background: '#DBEAFE' }}>
+                <TableCell sx={{ fontWeight: 700, color: '#2563EB' }}>File</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#2563EB' }}>Subject</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#2563EB' }}>College</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#2563EB' }}>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {demoUploads.map((row, idx) => (
+                <TableRow key={idx}>
+                  <TableCell sx={{ p: 4 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Avatar sx={{ bgcolor: '#F59E0B', width: 32, height: 32, fontWeight: 700, fontSize: 16 }}>
+                        {row.type}
+                      </Avatar>
+                      <Typography color="#2563EB" fontWeight={600}>{row.file}</Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell>{row.subject}</TableCell>
+                  <TableCell>{row.college}</TableCell>
+                  <TableCell>
+                    <Button variant="contained" color="primary" href={row.url} sx={{ fontWeight: 600, borderRadius: 2, px: 3 }}>
+                      View
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Card>
+      <Footer />
+    </Box>
+  );
+} 
