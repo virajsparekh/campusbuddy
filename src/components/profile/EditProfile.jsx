@@ -1,129 +1,77 @@
-import { useState } from 'react'
+import React, { useState } from 'react';
+import { Box, Card, CardContent, Typography, Avatar, Button, TextField } from '@mui/material';
+import Header from '../common/Header';
+import Footer from '../common/Footer';
 
-export default function EditProfile() {
-  // Initial mock user data
-  const initialUser = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    bio: 'A passionate learner at Campus Buddy.',
-    location: 'San Diego, CA',
-  }
+const EditProfile = ({ user, onSave }) => {
+  const [form, setForm] = useState({
+    name: user?.name || '',
+    email: user?.email || '',
+    studentId: user?.studentId || '',
+    college: user?.college?.name || '',
+  });
 
-  const [user, setUser] = useState(initialUser)
-  const [previewUser, setPreviewUser] = useState(null)
-  const [errors, setErrors] = useState({})
+  const handleChange = (field) => (e) => {
+    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  };
 
-  const validate = () => {
-    const newErrors = {}
-    if (!user.name.trim()) newErrors.name = 'Name is required'
-    if (!user.email.trim()) {
-      newErrors.email = 'Email is required'
-    } else if (!/\S+@\S+\.\S+/.test(user.email)) {
-      newErrors.email = 'Email is invalid'
-    }
-    return newErrors
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (onSave) onSave(form);
+  };
 
-  const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value })
-  }
-
-  const handlePreview = () => {
-    const validationErrors = validate()
-    if (Object.keys(validationErrors).length === 0) {
-      setPreviewUser(user)
-      setErrors({})
-    } else {
-      setErrors(validationErrors)
-      setPreviewUser(null)
-    }
-  }
-
-  const handleSave = () => {
-    const validationErrors = validate()
-    if (Object.keys(validationErrors).length === 0) {
-      alert('Profile saved successfully (mock)')
-      setErrors({})
-      setPreviewUser(null)
-    } else {
-      setErrors(validationErrors)
-      setPreviewUser(null)
-    }
-  }
-
+  if (!user) return null;
   return (
-    <div className="editprofile-container">
-      <h2 className="editprofile-heading">✏️ Edit Profile</h2>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          handleSave()
-        }}
-        className="editprofile-form"
-      >
-        <div className="form-group">
-          <label htmlFor="name">Name:</label>
-          <input
-            id="name"
-            name="name"
-            value={user.name}
-            onChange={handleChange}
-            className={errors.name ? 'input-error' : ''}
-          />
-          {errors.name && <p className="error-text">{errors.name}</p>}
-        </div>
+    <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--cb-bg, #F1F5F9)', zIndex: 1 }}>
+      <Header />
+      <Card sx={{ maxWidth: 600, width: '100%', borderRadius: 4, boxShadow: 3, p: { xs: 2, sm: 4 }, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <Avatar sx={{ width: 80, height: 80, mb: 2, bgcolor: 'primary.main', fontSize: 36 }}>
+            {user.name.split(' ').map(w => w[0]).join('').slice(0,2)}
+          </Avatar>
+          <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>Edit Profile</Typography>
+          <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+            <TextField
+              label="Name"
+              value={form.name}
+              onChange={handleChange('name')}
+              fullWidth
+              margin="normal"
+              required
+            />
+            <TextField
+              label="Email"
+              value={form.email}
+              onChange={handleChange('email')}
+              fullWidth
+              margin="normal"
+              required
+            />
+            <TextField
+              label="Student ID"
+              value={form.studentId}
+              onChange={handleChange('studentId')}
+              fullWidth
+              margin="normal"
+              required
+            />
+            <TextField
+              label="College"
+              value={form.college}
+              onChange={handleChange('college')}
+              fullWidth
+              margin="normal"
+              required
+            />
+            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, fontWeight: 600 }}>
+              Save Changes
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
+      <Footer />
+    </Box>
+  );
+};
 
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input
-            id="email"
-            name="email"
-            value={user.email}
-            onChange={handleChange}
-            className={errors.email ? 'input-error' : ''}
-          />
-          {errors.email && <p className="error-text">{errors.email}</p>}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="bio">Bio:</label>
-          <textarea
-            id="bio"
-            name="bio"
-            value={user.bio}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="location">Location:</label>
-          <input
-            id="location"
-            name="location"
-            value={user.location}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-buttons">
-          <button type="button" onClick={handlePreview} className="preview-button">
-            Preview Changes
-          </button>
-          <button type="submit" className="save-button">
-            Save
-          </button>
-        </div>
-      </form>
-
-      {previewUser && (
-        <div className="preview-section">
-          <h3>Preview</h3>
-          <p><strong>Name:</strong> {previewUser.name}</p>
-          <p><strong>Email:</strong> {previewUser.email}</p>
-          <p><strong>Bio:</strong> {previewUser.bio}</p>
-          <p><strong>Location:</strong> {previewUser.location}</p>
-        </div>
-      )}
-    </div>
-  )
-}
+export default EditProfile;

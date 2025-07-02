@@ -15,7 +15,11 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleChange = (field) => (e) => {
-    setForm((prev) => ({ ...prev, [field]: e.target.value, errors: { ...prev.errors, [field]: undefined } }));
+    setForm((prev) => ({
+      ...prev,
+      [field]: e.target.value,
+      errors: { ...prev.errors, [field]: undefined }
+    }));
   };
 
   const validate = () => {
@@ -38,52 +42,79 @@ const Login = () => {
   };
 
   return (
-    <Box className="login-bg" sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--cb-bg, #F1F5F9)', zIndex: 1 }}>
+    <Box
+      className="login-bg"
+      sx={{
+        minHeight: '100vh',
+        width: '100vw',
+        display: 'flex',
+        flexDirection: 'column',
+        background: 'var(--cb-bg, #F1F5F9)'
+      }}
+    >
       <Header />
-      <div className="login-card glass">
-      <CampusBuddyLogo style={{ height: '200px', width: '260px', margin: 0, padding: 2 }} />
-        <Typography className="login-title" variant="h5" component="h1" gutterBottom>
-          Welcome Back
-        </Typography>
-        <form className="login-form" onSubmit={handleSubmit} noValidate>
-          <FormField
-            label="Email"
-            value={form.email}
-            onChange={handleChange('email')}
-            error={!!form.errors.email}
-            helperText={form.errors.email}
-            name="email"
-            autoComplete="email"
-            type="email"
-            required
-          />
-          <FormField
-            label="Password"
-            value={form.password}
-            onChange={handleChange('password')}
-            error={!!form.errors.password}
-            helperText={form.errors.password}
-            name="password"
-            autoComplete="current-password"
-            type="password"
-            required
-          />
-          <div className="login-links">
-            <Link onClick={() => navigate('/forgot-password')} underline="hover" variant="body2">
-              Forgot password?
-            </Link>
-            <Link onClick={() => navigate('/signup')} underline="hover" variant="body2">
-              Sign Up
-            </Link>
-          </div>
-          <PrimaryButton className="login-btn" type="submit" disabled={submitting} aria-label="Login">
-            {submitting ? 'Logging in...' : 'Login'}
-          </PrimaryButton>
-        </form>
-      </div>
-      <Footer />
+
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          py: 6
+        }}
+      >
+        <div className="login-card glass">
+          <CampusBuddyLogo style={{ height: '200px', width: '260px', margin: 0, padding: 2 }} />
+          <Typography className="login-title" variant="h5" component="h1" gutterBottom>
+            Welcome Back
+          </Typography>
+          <form className="login-form" onSubmit={handleSubmit} noValidate>
+            <FormField
+              label="Email"
+              value={form.email}
+              onChange={handleChange('email')}
+              error={!!form.errors.email}
+              helperText={form.errors.email}
+              name="email"
+              autoComplete="email"
+              type="email"
+              required
+            />
+            <FormField
+              label="Password"
+              value={form.password}
+              onChange={handleChange('password')}
+              error={!!form.errors.password}
+              helperText={form.errors.password}
+              name="password"
+              autoComplete="current-password"
+              type="password"
+              required
+            />
+            <div className="login-links">
+              <Link onClick={() => navigate('/forgot-password')} underline="hover" variant="body2">
+                Forgot password?
+              </Link>
+              <Link onClick={() => navigate('/signup')} underline="hover" variant="body2">
+                Sign Up
+              </Link>
+            </div>
+            <PrimaryButton className="login-btn" type="submit" disabled={submitting} aria-label="Login">
+              {submitting ? 'Logging in...' : 'Login'}
+            </PrimaryButton>
+          </form>
+        </div>
+      </Box>
+
+      <Footer
+        sx={{
+          textAlign: 'center',
+          py: 2,
+          backgroundColor: '#f5f5f5'
+        }}
+      />
     </Box>
   );
 };
 
-export default Login; 
+export default Login;
