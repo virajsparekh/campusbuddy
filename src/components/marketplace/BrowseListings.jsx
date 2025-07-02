@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, TextField, List, ListItem, ListItemIcon, ListItemText, Divider, Paper, Grid } from '@mui/material';
+import { Box, Typography, Button, TextField, List, ListItem, ListItemIcon, ListItemText, Divider, Paper, Grid, Alert } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import StarIcon from '@mui/icons-material/Star';
 import { Link as RouterLink } from 'react-router-dom';
 import Header from '../common/Header';
 const demoListings = [
@@ -76,6 +77,39 @@ export default function BrowseListings() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--cb-bg, #F1F5F9), align,', width: '100vw' }}>
       <Header />
+      <Alert 
+        severity="info" 
+        icon={<StarIcon />}
+        sx={{ 
+          mx: 0, 
+          mt: 0, 
+          mb: 2,
+          background: 'linear-gradient(135deg, #F59E0B 0%, #F97316 100%)',
+          color: 'white',
+          '& .MuiAlert-icon': { color: 'white' },
+          '& .MuiAlert-message': { color: 'white' }
+        }}
+        action={
+          <Button 
+            component={RouterLink}
+            to="/subscription"
+            variant="contained" 
+            size="small"
+            sx={{ 
+              background: 'white', 
+              color: '#F59E0B',
+              fontWeight: 600,
+              '&:hover': { background: '#f3f4f6' }
+            }}
+          >
+            Upgrade Now
+          </Button>
+        }
+      >
+        <Typography variant="body1" fontWeight={600}>
+          Get priority listings and premium features! Upgrade to Premium for better visibility and exclusive benefits.
+        </Typography>
+      </Alert>
       <Box sx={{ display: 'flex', flexDirection: 'row', minHeight: '100vh', background: 'var(--cb-bg, #F1F5F9), align,' }}>
       <Box sx={{ width: 280, minWidth: 220, background: '#fff', borderRight: '1px solid #e5e7eb', p: 3, display: { xs: 'none', md: 'block' } }}>
         <Typography variant="h6" fontWeight={700} mb={2} color="#2563EB">Campusbuddy Marketplace</Typography>

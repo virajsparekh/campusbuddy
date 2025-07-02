@@ -67,7 +67,7 @@ const Header = () => {
       open: openMarketplace,
       setOpen: setOpenMarketplace,
     },
-    { label: 'Events', to: '/events' },
+    { label: 'Events', to: '/events', isSpecial: true },
     {
       label: 'Community Q&A',
       children: [
@@ -215,7 +215,25 @@ const Header = () => {
                 </MenuItem>
               </Menu>
             </div>
-            <Button component={RouterLink} to="/events" color="primary" sx={{ fontWeight: 600, textTransform: 'capitalize', fontSize: 20 }}>
+            <Button
+              component={RouterLink}
+              to="/events"
+              sx={{
+                fontWeight: 600,
+                fontSize: 20,
+                background: 'linear-gradient(135deg, #F59E0B 0%, #F97316 100%)',
+                color: 'white',
+                borderRadius: 2,
+                px: 2.5,
+                py: 1,
+                boxShadow: 2,
+                textTransform: 'none',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #D97706 0%, #EA580C 100%)',
+                  color: 'white',
+                },
+              }}
+            >
               Events
             </Button>
             <div
@@ -338,6 +356,9 @@ const Header = () => {
                 </MenuItem>
                 <MenuItem component={RouterLink} to="/signup" onClick={handleMouseLeave}>
                   Sign Up
+                </MenuItem>
+                <MenuItem component={RouterLink} to="/subscription" onClick={handleMouseLeave}>
+                  Subcription
                 </MenuItem>
               </Menu>
             </div>
