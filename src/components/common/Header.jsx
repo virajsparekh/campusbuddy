@@ -328,7 +328,7 @@ const Header = () => {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
               >
-                Hello, Sign in
+                Hi, Sign in
               </Button>
               <Menu
                 id="account-menu"
