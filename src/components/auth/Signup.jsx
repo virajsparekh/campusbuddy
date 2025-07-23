@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import { Box, Link, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -9,11 +9,6 @@ import Header from '../common/Header';
 import Footer from '../common/Footer';
 import '../../styles/Signup.css';
 
-const colleges = [
-  { _id: "2d01cab714d11b81ad8224ac", name: "University of Toronto", province: "Ontario", type: "University" },
-  { _id: "64a1b0f845aabb11aa000008", name: "Sheridan College", province: "Ontario", type: "College" }
-];
-
 const Signup = () => {
   const [form, setForm] = useState({
     name: '',
@@ -22,8 +17,15 @@ const Signup = () => {
     studentId: '',
     college: '',
     errors: {},
+    role: 'student'
   });
+  const colleges = [
+    { _id: "2d01cab714d11b81ad8224ac", name: "University of Toronto", province: "Ontario", type: "University" },
+    { _id: "64a1b0f845aabb11aa000008", name: "Sheridan College", province: "Ontario", type: "College" }
+  ];
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (field) => (e) => {
@@ -44,15 +46,44 @@ const Signup = () => {
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
     const errors = validate();
     if (Object.keys(errors).length > 0) {
       setForm((prev) => ({ ...prev, errors }));
       return;
     }
     setSubmitting(true);
-    setTimeout(() => setSubmitting(false), 1000);
+    try {
+      const selectedCollege = colleges.find(c => c._id === form.college);
+      const collegeObj = selectedCollege
+        ? { name: selectedCollege.name, province: selectedCollege.province, type: selectedCollege.type }
+        : null;
+      const payload = {
+        email: form.email,
+        password: form.password,
+        name: form.name,
+        role: form.role,
+        college: collegeObj
+      };
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        setSuccess('User created successfully! Redirecting to login...');
+        setTimeout(() => navigate('/login'), 1500);
+      } else {
+        const data = await res.json();
+        setError(data.msg || 'Signup failed');
+      }
+    } catch (err) {
+      setError('Signup failed');
+    }
+    setSubmitting(false);
   };
 
   return (
@@ -67,7 +98,6 @@ const Signup = () => {
       }}
     >
       <Header />
-
       <Box
         sx={{
           flex: 1,
@@ -169,17 +199,12 @@ const Signup = () => {
             <PrimaryButton className="signup-btn" type="submit" disabled={submitting} aria-label="Sign up">
               {submitting ? 'Signing up...' : 'Sign Up'}
             </PrimaryButton>
+            {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
+            {success && <div style={{ color: 'green', marginTop: 8 }}>{success}</div>}
           </form>
         </div>
       </Box>
-
-      <Footer
-        sx={{
-          textAlign: 'center',
-          py: 2,
-          backgroundColor: '#f5f5f5',
-        }}
-      />
+      <Footer sx={{ textAlign: 'center', py: 2, backgroundColor: '#f5f5f5' }} />
     </Box>
   );
 };

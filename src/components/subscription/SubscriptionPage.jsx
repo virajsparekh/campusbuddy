@@ -34,6 +34,7 @@ import {
   CreditCard as CreditCardIcon,
   Lock as LockIcon
 } from '@mui/icons-material';
+import { useLocation } from 'react-router-dom';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 
@@ -77,6 +78,7 @@ const plans = [
 ];
 
 export default function SubscriptionPage() {
+  const location = useLocation();
   const [selectedPlan, setSelectedPlan] = useState(plans[0]);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('card');
@@ -91,6 +93,12 @@ export default function SubscriptionPage() {
     <Box sx={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
       <Header />
       <Container maxWidth="sm">
+        {/* Show message if redirected from premium-only route */}
+        {location.state && location.state.message && (
+          <Alert severity="warning" sx={{ mb: 3, fontSize: 18, fontWeight: 600 }}>
+            {location.state.message}
+          </Alert>
+        )}
         {/* Header */}
         <Box sx={{ textAlign: 'center', mb: 5 }}>
           <Chip label="Premium" color="warning" icon={<StarIcon />} sx={{ fontWeight: 700, fontSize: 18, mb: 2, px: 2, py: 1, borderRadius: 2 }} />

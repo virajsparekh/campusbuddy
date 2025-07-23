@@ -12,7 +12,7 @@ import {
   Select,
   FormControl
 } from '@mui/material';
-import AdminSidebar from './AdminSidebar'; // make sure path is correct
+import AdminSidebar from './AdminSidebar'; 
 
 const categories = ['Workshop', 'Seminar', 'Party', 'Sports', 'Meetup', 'Other'];
 
