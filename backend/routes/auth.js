@@ -42,7 +42,15 @@ router.post('/signup', async (req, res) => {
     const refreshToken = generateRefreshToken(user);
     user.refreshTokens = [refreshToken];
     await user.save();
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
+    
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    };
+    
+    res.cookie('refreshToken', refreshToken, cookieOptions);
     res.json({ token: accessToken, user });
   } catch (err) {
     res.status(500).send('Server error');
@@ -63,7 +71,15 @@ router.post('/login', async (req, res) => {
     const refreshToken = generateRefreshToken(user);
     user.refreshTokens.push(refreshToken);
     await user.save();
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
+    
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    };
+    
+    res.cookie('refreshToken', refreshToken, cookieOptions);
     res.json({ token: accessToken, user });
   } catch (err) {
     res.status(500).send('Server error');

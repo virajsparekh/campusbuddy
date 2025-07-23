@@ -14,7 +14,18 @@ const marketplaceRoutes = require('./routes/marketplace');
 console.log('Marketplace routes loaded successfully');
 
 const app = express();
-app.use(cors());
+
+// CORS configuration for production
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-vercel-domain.vercel.app', 'https://campusbuddy.vercel.app'] // Replace with your actual domain
+    : ['http://localhost:5174', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' })); // Increased limit for large image uploads
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
