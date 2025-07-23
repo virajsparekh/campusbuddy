@@ -5,7 +5,7 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import StarIcon from '@mui/icons-material/Star';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import Header from '../common/Header';
 import { marketplaceAPI } from '../../services/marketplaceAPI';
 
@@ -18,7 +18,6 @@ const categories = [
 ];
 
 export default function BrowseListings() {
-  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [listings, setListings] = useState([]);
@@ -68,11 +67,6 @@ export default function BrowseListings() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleListingClick = (listingId) => {
-    console.log('Navigating to listing:', listingId);
-    navigate(`/marketplace/listing/${listingId}`);
   };
 
   // Transform API data to match the existing component structure
@@ -214,17 +208,7 @@ export default function BrowseListings() {
               ) : (
                 transformedListings.map(listing => (
                   <Grid item xs={12} sm={6} md={4} lg={3} key={listing.id}>
-                    <Paper 
-                      elevation={2} 
-                      sx={{ 
-                        borderRadius: 3, 
-                        overflow: 'hidden', 
-                        cursor: 'pointer', 
-                        transition: 'box-shadow 0.2s', 
-                        '&:hover': { boxShadow: 8 } 
-                      }}
-                      onClick={() => handleListingClick(listing.id)}
-                    >
+                    <Paper elevation={2} sx={{ borderRadius: 3, overflow: 'hidden', cursor: 'pointer', transition: 'box-shadow 0.2s', '&:hover': { boxShadow: 8 } }}>
                       {listing.priority && (
                         <Box sx={{ 
                           background: 'linear-gradient(45deg, #FFD700, #FFA500)', 
@@ -253,23 +237,6 @@ export default function BrowseListings() {
                         <Typography color="text.secondary" sx={{ fontSize: 12, mt: 1, opacity: 0.7 }}>
                           {listing.type} • {new Date(listing.createdAt).toLocaleDateString()}
                         </Typography>
-                        <Button 
-                          size="small" 
-                          variant="outlined" 
-                          sx={{ 
-                            mt: 1, 
-                            fontSize: '0.75rem', 
-                            textTransform: 'none',
-                            borderRadius: 1,
-                            minHeight: 28
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleListingClick(listing.id);
-                          }}
-                        >
-                          View Details
-                        </Button>
                       </Box>
                     </Paper>
                   </Grid>

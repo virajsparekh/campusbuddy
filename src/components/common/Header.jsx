@@ -62,7 +62,7 @@ const Header = () => {
       children: [
         { label: 'Browse Listings', to: '/marketplace' },
         { label: 'Post Listing', to: '/marketplace/post' },
-        { label: 'My Listings', to: '/marketplace/mylistings' },
+        { label: 'My Listings', to: '/marketplace/my-listings' },
       ],
       open: openMarketplace,
       setOpen: setOpenMarketplace,
@@ -254,7 +254,7 @@ const Header = () => {
                 <MenuItem component={RouterLink} to="/marketplace/post" onClick={() => setAnchorElMarketplace(null)}>
                   Post Listing
                 </MenuItem>
-                <MenuItem component={RouterLink} to="/marketplace/mylistings" onClick={() => setAnchorElMarketplace(null)}>
+                <MenuItem component={RouterLink} to="/marketplace/my-listings" onClick={() => setAnchorElMarketplace(null)}>
                   My Listings
                 </MenuItem>
               </Menu>
