@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, Card, CardContent, Typography, Button, Avatar, Container, TextField, Stack } from '@mui/material';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
+import { AuthContext } from '../../context/AuthContext';
 
 const initialUser = {
   name: 'Jane Doe',
@@ -12,7 +13,7 @@ const initialUser = {
 };
 
 export default function UserProfile() {
-  const [user, setUser] = useState(initialUser);
+  const { user, setUser } = useContext(AuthContext);
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({
     name: user.name,
@@ -21,6 +22,23 @@ export default function UserProfile() {
     role: user.role,
     college: user.college.name,
   });
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const res = await fetch('/api/user/profile', {
+        headers: { 'x-auth-token': token }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data.user);
+      }
+    };
+    fetchUser();
+  }, [setUser]);
+
+  if (!user) return <div>Loading...</div>;
 
   const handleEdit = () => setEditing(true);
 

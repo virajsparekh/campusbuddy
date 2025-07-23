@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Typography from '@mui/material/Typography';
 import { Box, Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -8,17 +8,20 @@ import CampusBuddyLogo from '../common/CampusBuddyLogo';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 import '../../styles/Login.css';
+import { AuthContext } from '../../context/AuthContext';
 
 const Login = () => {
   const [form, setForm] = useState({ email: '', password: '', errors: {} });
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext);
 
   const handleChange = (field) => (e) => {
     setForm((prev) => ({
       ...prev,
       [field]: e.target.value,
-      errors: { ...prev.errors, [field]: undefined }
+      errors: { ...prev.errors, [field]: undefined },
     }));
   };
 
@@ -29,16 +32,33 @@ const Login = () => {
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     const errors = validate();
     if (Object.keys(errors).length > 0) {
       setForm((prev) => ({ ...prev, errors }));
       return;
     }
     setSubmitting(true);
-    // TODO: Login logic
-    setTimeout(() => setSubmitting(false), 1000);
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email, password: form.password }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data.user, data.token); // Store user and token
+        navigate('/');
+      } else {
+        const data = await res.json();
+        setError(data.msg || 'Login failed');
+      }
+    } catch (err) {
+      setError('Login failed');
+    }
+    setSubmitting(false);
   };
 
   return (
@@ -49,24 +69,23 @@ const Login = () => {
         width: '100vw',
         display: 'flex',
         flexDirection: 'column',
-        background: 'var(--cb-bg, #F1F5F9)'
+        background: 'var(--cb-bg, #F1F5F9)',
       }}
     >
       <Header />
-
       <Box
         sx={{
           flex: 1,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          py: 6
+          py: 6,
         }}
       >
         <div className="login-card glass">
-          <CampusBuddyLogo style={{ height: '200px', width: '260px', margin: 0, padding: 2 }} />
+          <CampusBuddyLogo width={260} height={80} style={{ margin: 0, padding: 0 }} />
           <Typography className="login-title" variant="h5" component="h1" gutterBottom>
-            Welcome Back
+            Login to CampusBuddy
           </Typography>
           <form className="login-form" onSubmit={handleSubmit} noValidate>
             <FormField
@@ -96,23 +115,17 @@ const Login = () => {
                 Forgot password?
               </Link>
               <Link onClick={() => navigate('/signup')} underline="hover" variant="body2">
-                Sign Up
+                Don&apos;t have an account? Sign Up
               </Link>
             </div>
             <PrimaryButton className="login-btn" type="submit" disabled={submitting} aria-label="Login">
               {submitting ? 'Logging in...' : 'Login'}
             </PrimaryButton>
+            {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
           </form>
         </div>
       </Box>
-
-      <Footer
-        sx={{
-          textAlign: 'center',
-          py: 2,
-          backgroundColor: '#f5f5f5'
-        }}
-      />
+      <Footer sx={{ textAlign: 'center', py: 2, backgroundColor: '#f5f5f5' }} />
     </Box>
   );
 };

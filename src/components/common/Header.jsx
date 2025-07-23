@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
@@ -15,14 +15,16 @@ import Collapse from '@mui/material/Collapse';
 import MenuIcon from '@mui/icons-material/Menu';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import CampusBuddyLogo from './CampusBuddyLogo';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { AuthContext } from '../../context/AuthContext';
 
 const HEADER_HEIGHT = 80;
 
 const Header = () => {
+  const { user, setUser } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElStudyHub, setAnchorElStudyHub] = useState(null);
   const [anchorElMarketplace, setAnchorElMarketplace] = useState(null);
@@ -33,18 +35,16 @@ const Header = () => {
   const [openMarketplace, setOpenMarketplace] = useState(false);
   const [openQA, setOpenQA] = useState(false);
   const [openSupport, setOpenSupport] = useState(false);
+  const navigate = useNavigate();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Open menu on mouse enter
   const handleMouseEnter = (event) => setAnchorEl(event.currentTarget);
-  // Close menu on mouse leave (from button or menu)
   const handleMouseLeave = () => setAnchorEl(null);
 
   const open = Boolean(anchorEl);
 
-  // Sidebar menu structure
   const sidebarMenu = [
     { label: 'Home', to: '/' },
     {
@@ -92,6 +92,50 @@ const Header = () => {
     },
     { label: 'Hello, Sign in', to: '/login' },
   ];
+
+  if (!user) {
+    return (
+      <AppBar position="static" color="inherit" elevation={1} sx={{ mb: 2, height: HEADER_HEIGHT }}>
+        <Toolbar sx={{ justifyContent: 'space-between', minHeight: HEADER_HEIGHT, height: HEADER_HEIGHT, px: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+            <RouterLink to="/" style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+              <CampusBuddyLogo style={{ height: '200px', width: '260px', margin: 0, padding: 2 }} />
+            </RouterLink>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button component={RouterLink} to="/login" color="primary" sx={{ fontWeight: 600, fontSize: 20 }}>
+              Login
+            </Button>
+            <Button component={RouterLink} to="/signup" color="primary" variant="outlined" sx={{ fontWeight: 600, fontSize: 20 }}>
+              Sign Up
+            </Button>
+          </Box>
+        </Toolbar>
+      </AppBar>
+    );
+  }
+
+  if (!user) {
+    return (
+      <AppBar position="static" color="inherit" elevation={1} sx={{ mb: 2, height: HEADER_HEIGHT }}>
+        <Toolbar sx={{ justifyContent: 'space-between', minHeight: HEADER_HEIGHT, height: HEADER_HEIGHT, px: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+            <RouterLink to="/" style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+              <CampusBuddyLogo style={{ height: '200px', width: '260px', margin: 0, padding: 2 }} />
+            </RouterLink>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button component={RouterLink} to="/login" color="primary" sx={{ fontWeight: 600, fontSize: 20 }}>
+              Login
+            </Button>
+            <Button component={RouterLink} to="/signup" color="primary" variant="outlined" sx={{ fontWeight: 600, fontSize: 20 }}>
+              Sign Up
+            </Button>
+          </Box>
+        </Toolbar>
+      </AppBar>
+    );
+  }
 
   return (
     <AppBar position="static" color="inherit" elevation={1} sx={{ mb: 2, height: HEADER_HEIGHT }}>
@@ -328,7 +372,7 @@ const Header = () => {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
               >
-                Hi, Sign in
+                Hi, {user.name.split(' ')[0]}
               </Button>
               <Menu
                 id="account-menu"
@@ -351,14 +395,11 @@ const Header = () => {
                 <MenuItem component={RouterLink} to="/profile" onClick={handleMouseLeave}>
                   My Profile
                 </MenuItem>
-                <MenuItem component={RouterLink} to="/login" onClick={handleMouseLeave}>
-                  Login
-                </MenuItem>
-                <MenuItem component={RouterLink} to="/signup" onClick={handleMouseLeave}>
-                  Sign Up
-                </MenuItem>
                 <MenuItem component={RouterLink} to="/subscription" onClick={handleMouseLeave}>
-                  Subcription
+                  Subscription
+                </MenuItem>
+                <MenuItem onClick={() => { setUser(null, null); navigate('/login'); handleMouseLeave(); }}>
+                  Logout
                 </MenuItem>
               </Menu>
             </div>

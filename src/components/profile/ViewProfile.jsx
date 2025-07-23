@@ -1,7 +1,27 @@
+import React, { useContext, useEffect } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 import { Card, CardContent, Typography, Avatar, Box, Stack } from '@mui/material';
 
-export default function ViewProfile({ user }) {
-  if (!user) return null;
+const ViewProfile = () => {
+  const { user, setUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const res = await fetch('/api/user/profile', {
+        headers: { 'x-auth-token': token }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data.user);
+      }
+    };
+    fetchUser();
+  }, [setUser]);
+
+  if (!user) return <div>Loading...</div>;
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
       <Avatar
@@ -24,4 +44,6 @@ export default function ViewProfile({ user }) {
       </Stack>
     </Box>
   );
-}
+};
+
+export default ViewProfile;

@@ -1,77 +1,72 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Signup from '../components/auth/Signup';
+import React, { useContext } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Home from '../pages/Home';
+import ContactUs from '../components/support/ContactUs';
+import HelpCenter from '../components/support/HelpCenter';
+import PrivacyPolicy from '../components/support/PrivacyPolicy';
+import TermsOfService from '../components/support/TermsOfService';
 import Login from '../components/auth/Login';
+import Signup from '../components/auth/Signup';
 import ForgotPassword from '../components/auth/ForgotPassword';
 import ResetPassword from '../components/auth/ResetPassword';
-import Home from '../pages/Home';
+import Dashboard from '../components/dashboard/Dashboard';
+import BrowseEvents from '../components/events/BrowseEvents';
+import BrowseListings from '../components/marketplace/BrowseListings';
+import MyListings from '../components/marketplace/MyListings';
+import PostListing from '../components/marketplace/PostListing';
+import AccountSettings from '../components/profile/AccountSettings';
+import EditProfile from '../components/profile/EditProfile';
 import UserProfile from '../components/profile/UserProfile';
 import ViewProfile from '../components/profile/ViewProfile';
-import EditProfile from '../components/profile/EditProfile';
-import AccountSettings from '../components/profile/AccountSettings';
-import Box from '@mui/material/Box';
-import BrowseMaterials from '../components/studyhub/BrowseMaterials';
-import UploadMaterials from '../components/studyhub/UploadMaterials';
-import MyUploads from '../components/studyhub/MyUploads';
-import BrowseListings from '../components/marketplace/BrowseListings';
-import PostListing from '../components/marketplace/PostListing';
-import MyListings from '../components/marketplace/MyListings';
 import AskQuestion from '../components/qa/AskQuestion';
-import MyQuestions from '../components/qa/MyQuestions';
-import MyAnswers from '../components/qa/MyAnswers';
 import BrowseQuestions from '../components/qa/BrowseQuestions';
-import BrowseEvents from '../components/events/BrowseEvents';
-import HelpCenter from '../components/support/HelpCenter';
-import ContactUs from '../components/support/ContactUs';
-import TermsOfService from '../components/support/TermsOfService';
-import PrivacyPolicy from '../components/support/PrivacyPolicy';
-import AdminPostEvent from '../components/admin/AdminPostEvent';
-import AdminUserManagement from '../components/admin/AdminUserManagement';
-import AdminDashboard from '../components/admin/AdminDashboard';
+import MyAnswers from '../components/qa/MyAnswers';
+import MyQuestions from '../components/qa/MyQuestions';
+import BrowseMaterials from '../components/studyhub/BrowseMaterials';
+import MyUploads from '../components/studyhub/MyUploads';
+import UploadMaterials from '../components/studyhub/UploadMaterials';
 import SubscriptionPage from '../components/subscription/SubscriptionPage';
+import ProtectedRoute from '../components/auth/ProtectedRoute';
+import { AuthContext } from '../context/AuthContext';
+import AdminDashboard from '../components/admin/AdminDashboard';
 
-function AppRoutes() {
+const AppRoutes = () => {
+  const { user } = useContext(AuthContext);
+  const isAdmin = user && user.role === 'admin';
   return (
-    <Router>
-      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            {/* Profile routes */}
-            <Route path="/profile" element={<UserProfile user={{ name: 'Jane Doe', email: 'jane@example.com', studentId: 'S123456', role: 'student', college: { name: 'Sample College', type: 'Public', province: 'Ontario' } }} />} />
-            <Route path="/profile/view" element={<ViewProfile user={{ name: 'Jane Doe', email: 'jane@example.com', studentId: 'S123456', role: 'student', college: { name: 'Sample College', type: 'Public', province: 'Ontario' } }} />} />
-            <Route path="/profile/edit" element={<EditProfile user={{ name: 'Jane Doe', email: 'jane@example.com', studentId: 'S123456', role: 'student', college: { name: 'Sample College', type: 'Public', province: 'Ontario' } }} onSave={() => {}} />} />
-            <Route path="/profile/settings" element={<AccountSettings user={{ name: 'Jane Doe', email: 'jane@example.com', studentId: 'S123456', role: 'student', isPremium: true, premiumExpiry: '2024-12-31', college: { name: 'Sample College', type: 'Public', province: 'Ontario' } }} />} />
-            <Route path="/studyhub/browse" element={<BrowseMaterials />} />
-            <Route path="/studyhub/upload" element={<UploadMaterials />} />
-            <Route path="/studyhub/myuploads" element={<MyUploads />} />
-            <Route path="/studyhub" element={<BrowseMaterials />} />
-            <Route path="/marketplace" element={<BrowseListings />} />
-            <Route path="/marketplace/post" element={<PostListing />} />
-            <Route path="/marketplace/mylistings" element={<MyListings />} />
-            <Route path="/qa/ask" element={<AskQuestion />} />
-            <Route path="/qa/myquestions" element={<MyQuestions />} />
-            <Route path="/qa/myanswers" element={<MyAnswers />} />
-            <Route path="/qa/browse" element={<BrowseQuestions />} />
-            <Route path="/events" element={<BrowseEvents />} />
-            <Route path="/support/help" element={<HelpCenter />} />
-            <Route path="/support/contact" element={<ContactUs />} />
-            <Route path="/support/terms" element={<TermsOfService />} />
-            <Route path="/support/privacy" element={<PrivacyPolicy />} />
-            <Route path="/admin/post-event" element={<AdminPostEvent />} />
-            <Route path="/admin/users" element={<AdminUserManagement />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/subscription" element={<SubscriptionPage />} />
-            {/* Add other routes here */}
-          </Routes>
-        </Box>
-      </Box>
-    </Router>
+    <Routes>
+      <Route path="/admin" element={isAdmin ? <AdminDashboard /> : <Navigate to="/login" />} />
+      {!isAdmin && <>
+        <Route path="/" element={<Home />} />
+        <Route path="/support/contact" element={<ContactUs />} />
+        <Route path="/support/help" element={<HelpCenter />} />
+        <Route path="/support/privacy" element={<PrivacyPolicy />} />
+        <Route path="/support/terms" element={<TermsOfService />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/dashboard" element={<ProtectedRoute user={user}><Dashboard /></ProtectedRoute>} />
+        <Route path="/events" element={<ProtectedRoute user={user} requirePremium><BrowseEvents /></ProtectedRoute>} />
+        <Route path="/marketplace" element={<ProtectedRoute user={user}><BrowseListings /></ProtectedRoute>} />
+        <Route path="/marketplace/my-listings" element={<ProtectedRoute user={user}><MyListings /></ProtectedRoute>} />
+        <Route path="/marketplace/post" element={<ProtectedRoute user={user}><PostListing /></ProtectedRoute>} />
+        <Route path="/profile/settings" element={<ProtectedRoute user={user}><AccountSettings /></ProtectedRoute>} />
+        <Route path="/profile/edit" element={<ProtectedRoute user={user}><EditProfile /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute user={user}><UserProfile /></ProtectedRoute>} />
+        <Route path="/profile/view" element={<ProtectedRoute user={user}><ViewProfile /></ProtectedRoute>} />
+        <Route path="/qa/ask" element={<ProtectedRoute user={user}><AskQuestion /></ProtectedRoute>} />
+        <Route path="/qa/browse" element={<ProtectedRoute user={user}><BrowseQuestions /></ProtectedRoute>} />
+        <Route path="/qa/my-answers" element={<ProtectedRoute user={user}><MyAnswers /></ProtectedRoute>} />
+        <Route path="/qa/my-questions" element={<ProtectedRoute user={user}><MyQuestions /></ProtectedRoute>} />
+        <Route path="/studyhub/browse" element={<ProtectedRoute user={user}><BrowseMaterials /></ProtectedRoute>} />
+        <Route path="/studyhub/my-uploads" element={<ProtectedRoute user={user}><MyUploads /></ProtectedRoute>} />
+        <Route path="/studyhub/upload" element={<ProtectedRoute user={user}><UploadMaterials /></ProtectedRoute>} />
+        <Route path="/subscription" element={<ProtectedRoute user={user}><SubscriptionPage /></ProtectedRoute>} />
+      </>}
+      <Route path="*" element={isAdmin ? <Navigate to="/admin" /> : <Navigate to="/login" />} />
+    </Routes>
   );
-}
+};
 
 export default AppRoutes;
