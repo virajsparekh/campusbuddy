@@ -40,14 +40,11 @@ const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Open menu on mouse enter
   const handleMouseEnter = (event) => setAnchorEl(event.currentTarget);
-  // Close menu on mouse leave (from button or menu)
   const handleMouseLeave = () => setAnchorEl(null);
 
   const open = Boolean(anchorEl);
 
-  // Sidebar menu structure
   const sidebarMenu = [
     { label: 'Home', to: '/' },
     {
@@ -97,7 +94,6 @@ const Header = () => {
   ];
 
   if (!user) {
-    // Show only Login/Signup
     return (
       <AppBar position="static" color="inherit" elevation={1} sx={{ mb: 2, height: HEADER_HEIGHT }}>
         <Toolbar sx={{ justifyContent: 'space-between', minHeight: HEADER_HEIGHT, height: HEADER_HEIGHT, px: 2 }}>
@@ -119,7 +115,28 @@ const Header = () => {
     );
   }
 
-  // User is logged in: show full original header, but personalize account dropdown
+  if (!user) {
+    return (
+      <AppBar position="static" color="inherit" elevation={1} sx={{ mb: 2, height: HEADER_HEIGHT }}>
+        <Toolbar sx={{ justifyContent: 'space-between', minHeight: HEADER_HEIGHT, height: HEADER_HEIGHT, px: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+            <RouterLink to="/" style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+              <CampusBuddyLogo style={{ height: '200px', width: '260px', margin: 0, padding: 2 }} />
+            </RouterLink>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button component={RouterLink} to="/login" color="primary" sx={{ fontWeight: 600, fontSize: 20 }}>
+              Login
+            </Button>
+            <Button component={RouterLink} to="/signup" color="primary" variant="outlined" sx={{ fontWeight: 600, fontSize: 20 }}>
+              Sign Up
+            </Button>
+          </Box>
+        </Toolbar>
+      </AppBar>
+    );
+  }
+
   return (
     <AppBar position="static" color="inherit" elevation={1} sx={{ mb: 2, height: HEADER_HEIGHT }}>
       <Toolbar sx={{ justifyContent: 'space-between', minHeight: HEADER_HEIGHT, height: HEADER_HEIGHT, px: 2 }}>
@@ -355,11 +372,7 @@ const Header = () => {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
               >
-<<<<<<< HEAD
-                Hello , Sign in
-=======
                 Hi, {user.name.split(' ')[0]}
->>>>>>> 05e7ed3 (Added authentication&authorization implemented jwt, added automated test cases and dynamic ui changes)
               </Button>
               <Menu
                 id="account-menu"
