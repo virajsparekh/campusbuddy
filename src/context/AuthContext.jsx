@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import { getApiUrl } from '../utils/api';
 
 export const AuthContext = createContext();
 
@@ -39,7 +40,7 @@ export const AuthProvider = ({ children }) => {
         // Only try to validate token if we have one
         if (storedToken) {
           try {
-            const response = await fetch('http://localhost:5001/api/user/profile', {
+            const response = await fetch(getApiUrl('/api/user/profile'), {
               headers: { 'x-auth-token': storedToken }
             });
             
@@ -92,7 +93,7 @@ export const AuthProvider = ({ children }) => {
     if (!token) return false;
     
     try {
-      const response = await fetch('http://localhost:5001/api/user/profile', {
+      const response = await fetch(getApiUrl('/api/user/profile'), {
         headers: { 'x-auth-token': token }
       });
       

@@ -9,6 +9,7 @@ import Header from '../common/Header';
 import Footer from '../common/Footer';
 import '../../styles/Login.css';
 import { AuthContext } from '../../context/AuthContext';
+import { getApiUrl } from '../../utils/api';
 
 const Login = () => {
   const [form, setForm] = useState({ email: '', password: '', errors: {} });
@@ -42,7 +43,7 @@ const Login = () => {
     }
     setSubmitting(true);
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(getApiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: form.email, password: form.password }),

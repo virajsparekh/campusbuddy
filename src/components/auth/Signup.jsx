@@ -8,6 +8,7 @@ import CampusBuddyLogo from '../common/CampusBuddyLogo';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 import '../../styles/Signup.css';
+import { getApiUrl } from '../../utils/api';
 
 const Signup = () => {
   const [form, setForm] = useState({
@@ -76,7 +77,7 @@ const Signup = () => {
         role: form.role,
         college: collegeObj
       };
-      const res = await fetch('/api/auth/signup', {
+      const res = await fetch(getApiUrl('/api/auth/signup'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
