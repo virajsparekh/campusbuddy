@@ -1,0 +1,29 @@
+services:
+  # Backend API Service
+  - type: web
+    name: campusbuddy-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      - key: MONGODB_URI
+        sync: false  # You'll need to set this in Render dashboard
+      - key: JWT_SECRET
+        sync: false  # You'll need to set this in Render dashboard
+    healthCheckPath: /api/health
+
+  # Frontend Service
+  - type: web
+    name: campusbuddy-frontend
+    env: static
+    plan: free
+    buildCommand: npm run build:clean
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://campusbuddy-backend.onrender.com 

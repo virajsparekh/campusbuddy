@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --port 5174",
     "build": "vite build",
+    "build:clean": "rm -rf node_modules package-lock.json && npm install --force && npm run build",
     "lint": "eslint . --ext .js,.jsx",
     "preview": "vite preview",
     "test": "jest",
@@ -40,7 +41,11 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
-    "jest-environment-jsdom": "^30.0.5",
     "vite": "^6.3.5"
+  },
+  "overrides": {
+    "rollup": {
+      "fsevents": "~2.3.3"
+    }
   }
 }

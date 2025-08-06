@@ -13,7 +13,16 @@ const studyhubRoutes = require('./routes/studyhub');
 const marketplaceRoutes = require('./routes/marketplace');
 
 const app = express();
-app.use(cors());
+// CORS configuration for production
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://campusbuddy-frontend.onrender.com', 'https://campusbuddy.onrender.com']
+    : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

@@ -6,7 +6,6 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import StarIcon from '@mui/icons-material/Star';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Header from '../common/Header';
 import { useAuth } from '../../context/AuthContext';
 

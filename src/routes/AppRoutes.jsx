@@ -15,7 +15,6 @@ import BrowseListings from '../components/marketplace/BrowseListings';
 import MyListings from '../components/marketplace/MyListings';
 import PostListing from '../components/marketplace/PostListing';
 import ListingDetails from '../components/marketplace/ListingDetails';
-import ListingDetails from '../components/marketplace/ListingDetails';
 import AccountSettings from '../components/profile/AccountSettings';
 import EditProfile from '../components/profile/EditProfile';
 import UserProfile from '../components/profile/UserProfile';
