@@ -50,7 +50,16 @@ const Login = () => {
       if (res.ok) {
         const data = await res.json();
         setUser(data.user, data.token); // Store user and token
-        navigate('/');
+        
+        // Redirect based on user role
+  
+        if (data.user && data.user.role === 'admin') {
+          
+          navigate('/admin'); // Redirect admin users to admin dashboard
+        } else {
+          
+          navigate('/'); // Redirect regular users to home page
+        }
       } else {
         const data = await res.json();
         setError(data.msg || 'Login failed');

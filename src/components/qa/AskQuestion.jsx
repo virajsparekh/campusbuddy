@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, Paper, Chip, Stack, Avatar, Divider, InputAdornment, IconButton, Tooltip } from '@mui/material';
+import { Box, Typography, TextField, Button, Paper, Chip, Stack, Avatar, Divider, InputAdornment, IconButton, Tooltip, Alert, CircularProgress } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { Link as RouterLink } from 'react-router-dom';
-import Header from '../common/Header';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const tagSuggestions = ['study', 'exam', 'housing', 'marketplace', 'events', 'clubs', 'career', 'food', 'campus', 'tech'];
 
 export default function AskQuestion() {
+  const { token, user } = useAuth();
+  const navigate = useNavigate();
+  
+
   const [title, setTitle] = useState('');
   const [details, setDetails] = useState('');
   const [tags, setTags] = useState([]);
@@ -16,6 +20,8 @@ export default function AskQuestion() {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const handleAddTag = (tag) => {
     if (tag && !tags.includes(tag) && tags.length < 5) {
@@ -38,29 +44,72 @@ export default function AskQuestion() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim() || !details.trim() || tags.length === 0) {
       setError('Please fill in all required fields and add at least one tag.');
       return;
     }
+    
     setError('');
-    // Submit logic here
-    alert('Question submitted!');
+    setSuccess('');
+    setSubmitting(true);
+    
+    try {
+      const response = await fetch('http://localhost:5001/api/qa/questions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token
+        },
+        body: JSON.stringify({
+          title: title.trim(),
+          description: details.trim(),
+          tags: tags
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSuccess('Question posted successfully! Redirecting...');
+        setTimeout(() => {
+          navigate('/qa/browse');
+        }, 1500);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to post question. Please try again.');
+      }
+    } catch (err) {
+      console.error('Error posting question:', err);
+      setError('Network error. Please check your connection and try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <Box sx={{ background: 'var(--cb-bg, #F1F5F9)', minHeight: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', width: '100vw' }}>
-      <Header />
-      <Box sx={{ width: '100%', maxWidth: 1400, display: 'flex', gap: 6, mx: 'auto', minHeight: '80vh' }}>
-        {/* Main Form */}
-        <Paper elevation={2} sx={{ flex: 1.5, maxWidth: 950, width: '100%', p: { xs: 2, md: 4 }, borderRadius: 4, minWidth: 0, minHeight: '80vh', maxHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflowY: 'auto' }}>
+    <Box sx={{ display: 'flex', gap: 6 }}>
+      {/* Main Form */}
+      <Paper elevation={2} sx={{ flex: 1, maxWidth: 950, width: '100%', p: { xs: 2, md: 4 }, borderRadius: 4, minWidth: 0, minHeight: '80vh', maxHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflowY: 'auto' }}>
           <Typography variant="h4" fontWeight={700} mb={2} color="#2563EB">
             Ask the Community
           </Typography>
           <Typography variant="body1" color="text.secondary" mb={3}>
             Get help from fellow students and experts. Provide as much detail as possible for the best answers.
           </Typography>
+          
+          {error && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
+          )}
+          
+          {success && (
+            <Alert severity="success" sx={{ mb: 3 }}>
+              {success}
+            </Alert>
+          )}
+          
           <form onSubmit={handleSubmit}>
             <Stack spacing={3}>
               <TextField
@@ -134,16 +183,22 @@ export default function AskQuestion() {
                   </Box>
                 )}
               </Box>
-              {error && <Typography color="error" fontWeight={600}>{error}</Typography>}
               <Button
                 type="submit"
                 variant="contained"
                 color="primary"
                 size="large"
                 sx={{ fontWeight: 700, borderRadius: 2, fontSize: 18 }}
-                disabled={!title.trim() || !details.trim() || tags.length === 0}
+                disabled={!title.trim() || !details.trim() || tags.length === 0 || submitting}
               >
-                Post Your Question
+                {submitting ? (
+                  <>
+                    <CircularProgress size={20} sx={{ mr: 1, color: 'white' }} />
+                    Posting...
+                  </>
+                ) : (
+                  'Post Your Question'
+                )}
               </Button>
             </Stack>
           </form>
@@ -177,6 +232,5 @@ export default function AskQuestion() {
           </Paper>
         </Box>
       </Box>
-    </Box>
   );
 } 

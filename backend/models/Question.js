@@ -1,18 +1,65 @@
 const mongoose = require('mongoose');
 
-const AskedBySchema = new mongoose.Schema({
-  userId: String,
-  name: String,
-  email: String
-}, { _id: false });
-
 const QuestionSchema = new mongoose.Schema({
-  questionId: { type: String, required: true, unique: true },
-  title: String,
-  description: String,
-  tags: [String],
-  createdAt: { type: Date, default: Date.now },
-  askedBy: { type: AskedBySchema, required: true }
+  questionId: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  tags: [{
+    type: String
+  }],
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  askedBy: {
+    userId: {
+      type: String,
+      required: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    email: {
+      type: String,
+      required: true
+    }
+  },
+  // Optional fields for enhanced functionality
+  views: {
+    type: Number,
+    default: 0
+  },
+  votes: {
+    type: Number,
+    default: 0
+  },
+  answers: {
+    type: Number,
+    default: 0
+  },
+  status: {
+    type: String,
+    enum: ['Open', 'Answered', 'Closed'],
+    default: 'Open'
+  },
+  userVotes: [{
+    userId: String,
+    voteType: {
+      type: String,
+      enum: ['up', 'down']
+    }
+  }]
 });
 
-module.exports = mongoose.model('Question', QuestionSchema); 
+module.exports = mongoose.model('Question', QuestionSchema, 'questions'); 

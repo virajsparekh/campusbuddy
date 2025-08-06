@@ -1,4 +1,3 @@
-// Jest configuration for ES modules
 module.exports = {
   testEnvironment: 'jsdom',
   extensionsToTreatAsEsm: ['.jsx'],
@@ -11,14 +10,10 @@ module.exports = {
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
+  testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.js'],
-  testMatch: [
-    '<rootDir>/src/**/__tests__/**/*.(js|jsx)',
-    '<rootDir>/src/**/*.(test|spec).(js|jsx)'
-  ],
-  collectCoverageFrom: [
-    'src/**/*.{js,jsx}',
-    '!src/index.js',
-    '!src/serviceWorker.js',
-  ]
+  transform: {
+    '^.+\\.(js|jsx)$': 'babel-jest',
+  },
+  moduleFileExtensions: ['js', 'jsx', 'json'],
 }; 
