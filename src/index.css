@@ -24,10 +24,136 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  padding: 0;
   min-width: 320px;
   min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: auto;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+/* Prevent unwanted scroll behavior on header hover */
+.MuiAppBar-root {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.MuiToolbar-root {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Prevent scroll on menu hover */
+.MuiMenu-root {
+  position: fixed !important;
+}
+
+.MuiPaper-root.MuiMenu-paper {
+  position: fixed !important;
+  overflow: visible !important;
+}
+
+/* Prevent automatic scrolling on page load/change */
+html {
+  scroll-behavior: auto !important;
+}
+
+body {
+  scroll-behavior: auto !important;
+}
+
+/* Prevent focus scrolling */
+*:focus {
+  scroll-margin-top: 0 !important;
+}
+
+/* Prevent automatic scroll restoration */
+html {
+  scroll-behavior: auto !important;
+  scroll-padding-top: 0 !important;
+}
+
+/* Prevent automatic scrolling on all pages */
+body {
+  scroll-behavior: auto !important;
+  overflow-anchor: none !important;
+}
+
+/* Prevent focus-based scrolling */
+* {
+  scroll-behavior: auto !important;
+}
+
+/* Prevent Material-UI from causing scroll */
+.MuiBox-root {
+  scroll-behavior: auto !important;
+}
+
+/* Prevent any automatic scrolling */
+*:focus {
+  scroll-behavior: auto !important;
+  scroll-margin-top: 0 !important;
+  scroll-margin-bottom: 0 !important;
+}
+
+/* Prevent horizontal scrolling on marketplace */
+.marketplace-container {
+  overflow-x: hidden !important;
+  width: 100% !important;
+}
+
+/* Strictly fixed card dimensions */
+.marketplace-card {
+  width: 280px !important;
+  height: 320px !important;
+  min-width: 280px !important;
+  max-width: 280px !important;
+  min-height: 320px !important;
+  max-height: 320px !important;
+}
+
+/* Strictly fixed content area dimensions */
+.marketplace-content {
+  width: 280px !important;
+  height: 140px !important;
+  min-width: 280px !important;
+  max-width: 280px !important;
+  min-height: 140px !important;
+  max-height: 140px !important;
+}
+
+/* Strictly fixed image area dimensions */
+.marketplace-image {
+  width: 280px !important;
+  height: 180px !important;
+  min-width: 280px !important;
+  max-width: 280px !important;
+  min-height: 180px !important;
+  max-height: 180px !important;
+}
+
+/* Consistent marketplace layout */
+.marketplace-details-container {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  gap: 48px !important;
+}
+
+.marketplace-details-left {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  width: 400px !important;
+}
+
+.marketplace-details-right {
+  width: 500px !important;
+  max-width: 100% !important;
 }
 
 h1 {

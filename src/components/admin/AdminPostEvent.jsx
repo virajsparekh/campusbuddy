@@ -10,9 +10,11 @@ import {
   Stack,
   InputLabel,
   Select,
-  FormControl
+  FormControl,
+  Alert,
+  CircularProgress
 } from '@mui/material';
-import AdminSidebar from './AdminSidebar'; 
+import AdminLayout from './AdminLayout'; 
 
 const categories = ['Workshop', 'Seminar', 'Party', 'Sports', 'Meetup', 'Other'];
 
@@ -23,33 +25,107 @@ export default function AdminPostEvent() {
     date: '',
     time: '',
     location: '',
-    image: null,
-    category: ''
+    category: '',
+    isPremiumOnly: false
   });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = e => {
-    const { name, value, files } = e.target;
+    const { name, value, type, checked } = e.target;
     setForm(prev => ({
       ...prev,
-      [name]: files ? files[0] : value
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
-  const handleSubmit = e => {
+  const handleImageChange = e => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async e => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem('token');
+      
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('title', form.title);
+      formData.append('description', form.description);
+      formData.append('date', form.date);
+      formData.append('time', form.time);
+      formData.append('location', form.location);
+      formData.append('category', form.category);
+      formData.append('isPremiumOnly', form.isPremiumOnly);
+      
+      if (selectedImage) {
+        formData.append('image', selectedImage);
+      }
+
+      const response = await fetch('/api/admin/events', {
+        method: 'POST',
+        headers: {
+          'x-auth-token': token
+          // Don't set Content-Type for FormData, let browser set it with boundary
+        },
+        body: formData
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+        setForm({
+          title: '',
+          description: '',
+          date: '',
+          time: '',
+          location: '',
+          category: '',
+          isPremiumOnly: false
+        });
+        setSelectedImage(null);
+        setImagePreview(null);
+      } else {
+        const data = await response.json();
+        setError(data.msg || 'Failed to create event');
+      }
+    } catch (err) {
+      setError('Error creating event');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f3f4f6', width: '100vw' }}>
-      <AdminSidebar />
-      <Box sx={{ flex: 1, p: 4 }}>
-        <Container maxWidth="md" sx={{width: '500'}}>
+    <AdminLayout>
+      <Box sx={{ p: 4 }}>
+        <Container maxWidth="md">
           <Paper sx={{ p: 4, borderRadius: 4, boxShadow: 3 }}>
             <Typography variant="h4" fontWeight={700} color="#2563EB" mb={3}>
               Post New Event
             </Typography>
+            
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            )}
+            
             {submitted ? (
               <Typography color="success.main" fontWeight={600} textAlign="center" py={4}>
                 Event posted successfully!
@@ -120,23 +196,53 @@ export default function AdminPostEvent() {
                       ))}
                     </Select>
                   </FormControl>
-                  <Button variant="outlined" component="label">
-                    Upload Image
-                    <input
-                      type="file"
-                      name="image"
-                      accept="image/*"
-                      hidden
+                  <FormControl fullWidth>
+                    <InputLabel>Premium Only</InputLabel>
+                    <Select
+                      name="isPremiumOnly"
+                      value={form.isPremiumOnly}
+                      label="Premium Only"
                       onChange={handleChange}
-                    />
-                  </Button>
+                    >
+                      <MenuItem value={false}>No</MenuItem>
+                      <MenuItem value={true}>Yes</MenuItem>
+                    </Select>
+                  </FormControl>
+                  
+                  {/* Image Upload Section */}
+                  <Box>
+                    <Button variant="outlined" component="label" fullWidth>
+                      Upload Event Image
+                      <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={handleImageChange}
+                      />
+                    </Button>
+                    {imagePreview && (
+                      <Box sx={{ mt: 2, textAlign: 'center' }}>
+                        <img 
+                          src={imagePreview} 
+                          alt="Preview" 
+                          style={{ 
+                            maxWidth: '100%', 
+                            maxHeight: '200px', 
+                            borderRadius: '8px' 
+                          }} 
+                        />
+                      </Box>
+                    )}
+                  </Box>
+                  
                   <Button
                     type="submit"
                     variant="contained"
                     size="large"
                     sx={{ borderRadius: 2 }}
+                    disabled={loading}
                   >
-                    Post Event
+                    {loading ? <CircularProgress size={24} /> : 'Post Event'}
                   </Button>
                 </Stack>
               </form>
@@ -144,6 +250,6 @@ export default function AdminPostEvent() {
           </Paper>
         </Container>
       </Box>
-    </Box>
+    </AdminLayout>
   );
 }
