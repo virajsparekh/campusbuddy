@@ -1,40 +1,3 @@
-<<<<<<< HEAD
-import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Box, Typography, Card, CardMedia, CardContent, Button, Avatar, TextField, IconButton, Stack, Divider, Tooltip, Paper, CircularProgress, Alert } from '@mui/material';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import ShareIcon from '@mui/icons-material/Share';
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import ViewListIcon from '@mui/icons-material/ViewList';
-import AppsIcon from '@mui/icons-material/Apps';  
-import Header from '../common/Header';
-import { marketplaceAPI } from '../../services/marketplaceAPI';
-import { AuthContext } from '../../context/AuthContext';
-
-export default function MyListings() {
-  const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
-  const [search, setSearch] = useState('');
-  const [listings, setListings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Fetch user's listings
-  useEffect(() => {
-    fetchMyListings();
-  }, []);
-
-  const fetchMyListings = async () => {
-    try {
-      setLoading(true);
-      const data = await marketplaceAPI.getMyListings();
-      setListings(data || []);
-      setError(null);
-    } catch (error) {
-      console.error('Error fetching my listings:', error);
-      setError('Failed to load your listings');
-=======
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Card, CardMedia, CardContent, Button, Avatar, TextField, IconButton, Stack, Divider, Tooltip, Paper, CircularProgress, Alert, Pagination, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem, Snackbar } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
@@ -95,52 +58,11 @@ export default function MyListings() {
     } catch (err) {
       console.error('Error fetching my listings:', err);
       setError('Failed to load your listings. Please try again.');
->>>>>>> cc9c591 (Added API(backend) logic for every component)
     } finally {
       setLoading(false);
     }
   };
 
-<<<<<<< HEAD
-  // Transform real listing data to display format
-  const transformListing = (listing) => {
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return `${date.getMonth() + 1}/${date.getDate()}`;
-    };
-
-    return {
-      id: listing._id,
-      title: listing.title,
-      price: listing.type === 'item' ? listing.price : listing.rent,
-      image: listing.image || 'https://images.unsplash.com/photo-1586509114218-61c7e5b6be09?auto=format&fit=crop&w=400&q=80', // Default image
-      status: listing.isActive ? 'Active' : 'Inactive',
-      date: formatDate(listing.createdAt),
-      clicks: 0, // Default since we don't track clicks yet
-      type: listing.type,
-      description: listing.description,
-      location: listing.location,
-      address: listing.address,
-      priority: listing.priority
-    };
-  };
-
-  const handleListingClick = (listingId) => {
-    console.log('Navigating to listing from MyListings:', listingId);
-    navigate(`/marketplace/listing/${listingId}`);
-  };
-
-  const transformedListings = listings.map(transformListing);
-  const filtered = transformedListings.filter(l =>
-    l.title.toLowerCase().includes(search.trim().toLowerCase())
-  );
-
-  if (loading) {
-    return (
-      <Box sx={{ background: 'var(--cb-bg, #F1F5F9)', minHeight: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <Header />
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-=======
 
 
   // Edit listing
@@ -313,27 +235,12 @@ export default function MyListings() {
       <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Header />
         <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
->>>>>>> cc9c591 (Added API(backend) logic for every component)
           <CircularProgress />
         </Box>
       </Box>
     );
   }
 
-<<<<<<< HEAD
-  if (error) {
-    return (
-      <Box sx={{ background: 'var(--cb-bg, #F1F5F9)', minHeight: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <Header />
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-          <Alert severity="error">{error}</Alert>
-        </Box>
-      </Box>
-    );
-  }
-
-=======
->>>>>>> cc9c591 (Added API(backend) logic for every component)
   return (
     <Box sx={{ background: 'var(--cb-bg, #F1F5F9)', minHeight: '100vh', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       <Header />
@@ -352,109 +259,6 @@ export default function MyListings() {
               />
             </Box>
           </Stack>
-<<<<<<< HEAD
-          <Stack spacing={2}>
-            {filtered.map(listing => (
-              <Card 
-                key={listing.id} 
-                sx={{ 
-                  display: 'flex', 
-                  alignItems: 'flex-start', 
-                  p: 2, 
-                  borderRadius: 4, 
-                  boxShadow: 2, 
-                  background: '#fff',
-                  cursor: 'pointer',
-                  transition: 'box-shadow 0.2s',
-                  '&:hover': { boxShadow: 4 }
-                }}
-                onClick={() => handleListingClick(listing.id)}
-              >
-                <CardMedia
-                  component="img"
-                  image={listing.image}
-                  alt={listing.title}
-                  sx={{ width: 120, height: 90, borderRadius: 2, objectFit: 'cover', mr: 2 }}
-                />
-                <Box sx={{ flex: 1, minWidth: 0 }}>
-                  {listing.priority && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-                      <RocketLaunchIcon color="warning" fontSize="small" sx={{ mr: 0.5 }} />
-                      <Typography variant="body2" color="warning.main" fontWeight={600} sx={{ mr: 1 }}>
-                        Priority Listing
-                      </Typography>
-                    </Box>
-                  )}
-                  <Typography variant="subtitle1" fontWeight={700} sx={{ color: '#111827', mb: 0.5, lineHeight: 1.2 }}>
-                    {listing.title}
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                    <Typography variant="h6" fontWeight={700} sx={{ color: '#111827', fontSize: 18 }}>
-                      ${listing.price}{listing.type === 'accommodation' ? '/mo' : ''}
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                    {listing.status} • Listed on {listing.date}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                    {listing.description.length > 100 ? listing.description.substring(0, 100) + '...' : listing.description}
-                  </Typography>
-                  {listing.location && (
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                      📍 {listing.location}
-                    </Typography>
-                  )}
-                  {listing.address && (
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                      📍 {listing.address}
-                    </Typography>
-                  )}
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                    Listed on Marketplace • {listing.clicks} clicks on listing <InfoOutlinedIcon sx={{ fontSize: 16, verticalAlign: 'middle', ml: 0.5 }} color="disabled" />
-                  </Typography>
-                  <Stack direction="row" spacing={1} onClick={(e) => e.stopPropagation()}>
-                    <Button 
-                      variant="outlined" 
-                      color="primary" 
-                      sx={{ fontWeight: 600, borderRadius: 2, minWidth: 120 }}
-                      onClick={() => handleListingClick(listing.id)}
-                    >
-                      View Details
-                    </Button>
-                    <Button variant="contained" color="primary" sx={{ fontWeight: 600, borderRadius: 2, minWidth: 120 }}>
-                      Mark as sold
-                    </Button>
-                    <Button variant="outlined" color="primary" startIcon={<RocketLaunchIcon />} sx={{ fontWeight: 600, borderRadius: 2, minWidth: 120 }}>
-                      Boost listing
-                    </Button>
-                    <Button variant="outlined" color="primary" startIcon={<ShareIcon />} sx={{ fontWeight: 600, borderRadius: 2, minWidth: 100 }}>
-                      Share
-                    </Button>
-                    <IconButton><MoreHorizIcon /></IconButton>
-                  </Stack>
-                </Box>
-              </Card>
-            ))}
-          </Stack>
-          {filtered.length === 0 && (
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 8 }}>
-              <Typography variant="h6" color="text.secondary" gutterBottom>
-                {search ? 'No listings match your search' : 'No listings yet'}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                {search ? 'Try adjusting your search terms' : 'Start by posting your first listing'}
-              </Typography>
-              {!search && (
-                <Button 
-                  variant="contained" 
-                  href="/marketplace/post"
-                  sx={{ fontWeight: 600, borderRadius: 2 }}
-                >
-                  Post Your First Listing
-                </Button>
-              )}
-            </Box>
-=======
 
           {error && (
             <Alert severity="error" sx={{ mb: 2, width: '100%' }}>
@@ -566,26 +370,18 @@ export default function MyListings() {
                 </Box>
               )}
             </>
->>>>>>> cc9c591 (Added API(backend) logic for every component)
           )}
         </Box>
 
         <Box sx={{ width: 340, minWidth: 300, display: { xs: 'none', md: 'block' }, alignSelf: 'flex-start' }}>
           <Paper elevation={1} sx={{ p: 2, mb: 2, borderRadius: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-<<<<<<< HEAD
-              <Avatar src={user?.avatar || 'https://randomuser.me/api/portraits/men/75.jpg'} sx={{ width: 48, height: 48 }} />
-              <Box>
-                <Typography fontWeight={700}>{user?.name || 'User'}</Typography>
-                <Typography variant="body2" color="text.secondary">{transformedListings.length} active listings</Typography>
-=======
               <Avatar sx={{ width: 48, height: 48, bgcolor: 'primary.main' }}>
                 {user?.name?.charAt(0) || 'U'}
               </Avatar>
               <Box>
                 <Typography fontWeight={700}>{user?.name || 'User'}</Typography>
                 <Typography variant="body2" color="text.secondary">{totalItems} active listings</Typography>
->>>>>>> cc9c591 (Added API(backend) logic for every component)
               </Box>
             </Box>
             <Button
