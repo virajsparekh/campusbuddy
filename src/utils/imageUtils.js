@@ -2,7 +2,7 @@
  * Utility functions for handling images in the application
  */
 
-const BACKEND_URL = 'http://localhost:5001';
+const BACKEND_URL = 'https://campusbuddy-backend.onrender.com';
 
 /**
  * Get the full URL for an image

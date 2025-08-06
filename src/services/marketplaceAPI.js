@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'https://campusbuddy-backend.onrender.com';
 
 // Helper function to get auth token
 const getAuthToken = () => {
