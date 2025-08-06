@@ -24,6 +24,7 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 import { useAuth } from '../../context/AuthContext';
+import { getApiUrl } from '../../utils/api';
 
 // Custom hook to prevent automatic scrolling
 const useScrollPrevention = () => {
@@ -77,7 +78,7 @@ export default function BrowseMaterials() {
         return;
       }
       
-      let url = `http://localhost:5001/api/studyhub/materials?page=${currentPage}&limit=12`;
+      let url = getApiUrl(`/api/studyhub/materials?page=${currentPage}&limit=12`);
       
       if (search) url += `&search=${encodeURIComponent(search)}`;
       if (selectedSubject) url += `&subject=${encodeURIComponent(selectedSubject)}`;
@@ -117,7 +118,7 @@ export default function BrowseMaterials() {
   const fetchFilters = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5001/api/studyhub/stats', {
+      const response = await fetch(getApiUrl('/api/studyhub/stats'), {
         headers: {
           'x-auth-token': token
         }
@@ -140,7 +141,7 @@ export default function BrowseMaterials() {
   // Vote for material
   const handleVote = async (materialId, voteType) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/studyhub/materials/${materialId}/vote`, {
+      const response = await fetch(getApiUrl(`/api/studyhub/materials/${materialId}/vote`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -174,7 +175,7 @@ export default function BrowseMaterials() {
     if (material.fileURL.startsWith('http')) {
       window.open(material.fileURL, '_blank');
     } else {
-      window.open(`http://localhost:5001/api/studyhub${material.fileURL}`, '_blank');
+              window.open(getApiUrl(`/api/studyhub${material.fileURL}`), '_blank');
     }
   };
 

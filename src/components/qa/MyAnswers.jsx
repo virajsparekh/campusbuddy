@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../../utils/api';
 import { Box, Typography, Paper, Chip, Stack, Button, Avatar } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
@@ -20,7 +21,7 @@ export default function MyAnswers() {
       setLoading(true);
       setError('');
 
-      const response = await fetch('http://localhost:5001/api/qa/my-answers', {
+      const response = await fetch(getApiUrl('/api/qa/my-answers'), {
         headers: {
           'x-auth-token': token
         }

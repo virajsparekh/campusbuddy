@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../../utils/api';
 import { 
   Box, 
   Card, 
@@ -75,7 +76,7 @@ export default function MyUploads() {
         return;
       }
       
-      const response = await fetch(`http://localhost:5001/api/studyhub/materials/my-uploads?page=${currentPage}&limit=10`, {
+      const response = await fetch(getApiUrl(`/api/studyhub/materials/my-uploads?page=${currentPage}&limit=10`), {
         headers: {
           'x-auth-token': token
         }
@@ -108,7 +109,7 @@ export default function MyUploads() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5001/api/studyhub/materials/${materialId}`, {
+      const response = await fetch(getApiUrl(`/api/studyhub/materials/${materialId}`), {
         method: 'DELETE',
         headers: {
           'x-auth-token': token
@@ -141,7 +142,7 @@ export default function MyUploads() {
   // Update material
   const handleUpdate = async () => {
     try {
-      const response = await fetch(`http://localhost:5001/api/studyhub/materials/${editingMaterial._id}`, {
+      const response = await fetch(getApiUrl(`/api/studyhub/materials/${editingMaterial._id}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -173,7 +174,7 @@ export default function MyUploads() {
     if (material.fileURL.startsWith('http')) {
       window.open(material.fileURL, '_blank');
     } else {
-      window.open(`http://localhost:5001/api/studyhub${material.fileURL}`, '_blank');
+              window.open(getApiUrl(`/api/studyhub${material.fileURL}`), '_blank');
     }
   };
 

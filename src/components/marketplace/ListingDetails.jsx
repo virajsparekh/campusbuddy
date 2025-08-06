@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../../utils/api';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Box, 
@@ -40,7 +41,7 @@ export default function ListingDetails() {
 
         
 
-        const response = await fetch(`http://localhost:5001/api/marketplace/listings/${id}`, {
+        const response = await fetch(getApiUrl(`/api/marketplace/listings/${id}`), {
           headers: {
             'x-auth-token': token
           }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../../utils/api';
 import { Box, Typography, Card, CardMedia, CardContent, Button, Avatar, TextField, IconButton, Stack, Divider, Tooltip, Paper, CircularProgress, Alert, Pagination, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem, Snackbar } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import ShareIcon from '@mui/icons-material/Share';
@@ -41,7 +42,7 @@ export default function MyListings() {
         limit: 10
       });
 
-      const response = await fetch(`http://localhost:5001/api/marketplace/my-listings?${params}`, {
+      const response = await fetch(getApiUrl(`/api/marketplace/my-listings?${params}`), {
         headers: {
           'x-auth-token': token
         }
@@ -108,7 +109,7 @@ export default function MyListings() {
       };
 
 
-      const response = await fetch(`http://localhost:5001${endpoint}`, {
+      const response = await fetch(getApiUrl(endpoint), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -187,7 +188,7 @@ export default function MyListings() {
     try {
 
       
-      const response = await fetch(`http://localhost:5001/api/marketplace/listings/${listing._id}`, {
+      const response = await fetch(getApiUrl(`/api/marketplace/listings/${listing._id}`), {
         method: 'DELETE',
         headers: {
           'x-auth-token': token

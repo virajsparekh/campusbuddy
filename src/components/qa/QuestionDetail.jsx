@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getApiUrl } from '../../utils/api';
 import { 
   Box, 
   Typography, 
@@ -60,7 +61,7 @@ export default function QuestionDetail() {
       setError('');
 
       // Fetch question
-      const questionResponse = await fetch('http://localhost:5001/api/qa/questions/' + id, {
+      const questionResponse = await fetch(getApiUrl('/api/qa/questions/' + id), {
         headers: {
           'x-auth-token': token
         }
@@ -74,7 +75,7 @@ export default function QuestionDetail() {
       setQuestion(questionData.question);
 
       // Fetch answers
-      const answersResponse = await fetch('http://localhost:5001/api/qa/questions/' + id + '/answers', {
+      const answersResponse = await fetch(getApiUrl('/api/qa/questions/' + id + '/answers'), {
         headers: {
           'x-auth-token': token
         }
@@ -100,7 +101,7 @@ export default function QuestionDetail() {
   const refreshQuestionData = async () => {
     try {
       // Fetch answers only (this doesn't increment views)
-      const answersResponse = await fetch('http://localhost:5001/api/qa/questions/' + id + '/answers', {
+      const answersResponse = await fetch(getApiUrl('/api/qa/questions/' + id + '/answers'), {
         headers: {
           'x-auth-token': token
         }
@@ -142,7 +143,7 @@ export default function QuestionDetail() {
     setSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:5001/api/qa/questions/' + id + '/answers', {
+      const response = await fetch(getApiUrl('/api/qa/questions/' + id + '/answers'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -175,7 +176,7 @@ export default function QuestionDetail() {
   // Handle voting on answers
   const handleVote = async (answerId, voteType) => {
     try {
-      const response = await fetch('http://localhost:5001/api/qa/answers/' + answerId + '/vote', {
+      const response = await fetch(getApiUrl('/api/qa/answers/' + answerId + '/vote'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -201,7 +202,7 @@ export default function QuestionDetail() {
   // Handle accepting answer
   const handleAcceptAnswer = async (answerId) => {
     try {
-      const response = await fetch('http://localhost:5001/api/qa/answers/' + answerId + '/accept', {
+      const response = await fetch(getApiUrl('/api/qa/answers/' + answerId + '/accept'), {
         method: 'POST',
         headers: {
           'x-auth-token': token

@@ -17,6 +17,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 import { useAuth } from '../../context/AuthContext';
+import { getApiUrl } from '../../utils/api';
 
 const demoSubjects = ['Physics', 'Math', 'Computer Science', 'Biology', 'Chemistry', 'Engineering', 'Business', 'Arts', 'Literature', 'History'];
 const demoSemesters = ['Fall 2024', 'Spring 2025', 'Summer 2025', 'Fall 2025'];
@@ -96,7 +97,7 @@ export default function UploadMaterials() {
 
       
       
-      const response = await fetch('http://localhost:5001/api/studyhub/materials', {
+      const response = await fetch(getApiUrl('/api/studyhub/materials'), {
         method: 'POST',
         headers: {
           'x-auth-token': token

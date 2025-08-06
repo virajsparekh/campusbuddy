@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../../utils/api';
 import {
   Box, Typography, Paper, Chip, Stack, Button, IconButton, Tooltip, TextField, InputAdornment, Fab, Avatar
 } from '@mui/material';
@@ -26,7 +27,7 @@ export default function MyQuestions() {
       setLoading(true);
       setError('');
 
-      const response = await fetch('http://localhost:5001/api/qa/my-questions', {
+      const response = await fetch(getApiUrl('/api/qa/my-questions'), {
         headers: {
           'x-auth-token': token
         }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getApiUrl } from '../../utils/api';
 import { Box, Typography, Button, TextField, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, MenuItem, Select, InputLabel, Paper, Avatar, Switch, Alert, CircularProgress } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { useNavigate } from 'react-router-dom';
@@ -91,7 +92,7 @@ export default function PostListing() {
         imageUrl: form.imageUrl || imagePreview
       };
 
-      const response = await fetch(`http://localhost:5001${endpoint}`, {
+      const response = await fetch(getApiUrl(endpoint), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

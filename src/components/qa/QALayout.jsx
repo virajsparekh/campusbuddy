@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../../utils/api';
 import { Box, Paper, Typography, Stack, Button, Avatar } from '@mui/material';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
@@ -33,12 +34,12 @@ export default function QALayout() {
       if (!token) return;
 
       // Fetch user's questions
-      const questionsResponse = await fetch('http://localhost:5001/api/qa/my-questions', {
+      const questionsResponse = await fetch(getApiUrl('/api/qa/my-questions'), {
         headers: { 'x-auth-token': token }
       });
       
       // Fetch user's answers
-      const answersResponse = await fetch('http://localhost:5001/api/qa/my-answers', {
+      const answersResponse = await fetch(getApiUrl('/api/qa/my-answers'), {
         headers: { 'x-auth-token': token }
       });
 

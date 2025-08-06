@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../../utils/api';
 import { Box, Typography, Paper, Chip, Stack, Button, TextField, InputAdornment, Divider, List, ListItem, ListItemIcon, ListItemText, Avatar, MenuItem, Select, CircularProgress, Alert, Pagination } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -67,7 +68,7 @@ export default function BrowseQuestions() {
         params.append('status', status);
       }
 
-      const response = await fetch(`http://localhost:5001/api/qa/questions?${params}`, {
+      const response = await fetch(getApiUrl(`/api/qa/questions?${params}`), {
         headers: {
           'x-auth-token': token
         }

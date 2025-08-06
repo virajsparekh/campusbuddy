@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getApiUrl } from '../../utils/api';
 import { Box, Typography, TextField, Button, Paper, Chip, Stack, Avatar, Divider, InputAdornment, IconButton, Tooltip, Alert, CircularProgress } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
@@ -56,7 +57,7 @@ export default function AskQuestion() {
     setSubmitting(true);
     
     try {
-      const response = await fetch('http://localhost:5001/api/qa/questions', {
+      const response = await fetch(getApiUrl('/api/qa/questions'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

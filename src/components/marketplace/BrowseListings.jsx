@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../../utils/api';
 import { Box, Typography, Button, TextField, List, ListItem, ListItemIcon, ListItemText, Divider, Paper, Grid, Alert, CircularProgress, Pagination } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
@@ -50,7 +51,7 @@ export default function BrowseListings() {
 
       
 
-      const response = await fetch(`http://localhost:5001/api/marketplace/listings?${params}`, {
+      const response = await fetch(getApiUrl(`/api/marketplace/listings?${params}`), {
         headers: {
           'x-auth-token': token,
           'Content-Type': 'application/json'

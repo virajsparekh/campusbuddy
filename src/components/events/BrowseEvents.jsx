@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../../utils/api';
 import { Box, Typography, Paper, Chip, Stack, Avatar, Grid, Button, CircularProgress, Alert, Pagination } from '@mui/material';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -50,7 +51,7 @@ export default function BrowseEvents() {
         limit: itemsPerPage
       });
 
-      const response = await fetch(`http://localhost:5001/api/events?${params}`, {
+      const response = await fetch(getApiUrl(`/api/events?${params}`), {
         headers: {
           'x-auth-token': token
         }
