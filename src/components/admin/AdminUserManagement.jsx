@@ -28,6 +28,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import BlockIcon from '@mui/icons-material/Block';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AdminLayout from './AdminLayout'; 
+import { getApiUrl } from '../../utils/api';
 
 export default function AdminUserManagement() {
   const [users, setUsers] = useState([]);
@@ -49,7 +50,7 @@ export default function AdminUserManagement() {
     try {
       const token = localStorage.getItem('token');
       const searchParam = searchTerm ? `&search=${searchTerm}` : '';
-      const response = await fetch(`/api/admin/users?page=${page}&limit=10${searchParam}`, {
+      const response = await fetch(getApiUrl(`/api/admin/users?page=${page}&limit=10${searchParam}`), {
         headers: {
           'x-auth-token': token
         }
@@ -108,7 +109,7 @@ export default function AdminUserManagement() {
       
 
       
-      const response = await fetch(`/api/admin/users/${editUser._id}`, {
+      const response = await fetch(getApiUrl(`/api/admin/users/${editUser._id}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -145,7 +146,7 @@ export default function AdminUserManagement() {
     try {
       const token = localStorage.getItem('token');
       const endpoint = isBlocked ? 'unblock' : 'block';
-      const response = await fetch(`/api/admin/users/${userId}/${endpoint}`, {
+      const response = await fetch(getApiUrl(`/api/admin/users/${userId}/${endpoint}`), {
         method: 'PATCH',
         headers: {
           'x-auth-token': token

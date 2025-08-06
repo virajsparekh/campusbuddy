@@ -15,6 +15,7 @@ import {
   CircularProgress
 } from '@mui/material';
 import AdminLayout from './AdminLayout'; 
+import { getApiUrl } from '../../utils/api';
 
 const categories = ['Workshop', 'Seminar', 'Party', 'Sports', 'Meetup', 'Other'];
 
@@ -78,7 +79,7 @@ export default function AdminPostEvent() {
         formData.append('image', selectedImage);
       }
 
-      const response = await fetch('/api/admin/events', {
+      const response = await fetch(getApiUrl('/api/admin/events'), {
         method: 'POST',
         headers: {
           'x-auth-token': token

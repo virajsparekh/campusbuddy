@@ -37,6 +37,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import AddIcon from '@mui/icons-material/Add';
 import AdminLayout from './AdminLayout';
 import { getImageUrl, isValidImageUrl, handleImageError } from '../../utils/imageUtils';
+import { getApiUrl } from '../../utils/api';
 
 const categories = ['Workshop', 'Seminar', 'Party', 'Sports', 'Meetup', 'Other'];
 
@@ -70,7 +71,7 @@ export default function AdminEventManagement() {
     try {
       const token = localStorage.getItem('token');
       const searchParam = searchTerm ? `&search=${searchTerm}` : '';
-      const response = await fetch(`/api/admin/events?page=${page}&limit=10${searchParam}`, {
+      const response = await fetch(getApiUrl(`/api/admin/events?page=${page}&limit=10${searchParam}`), {
         headers: {
           'x-auth-token': token
         }
@@ -149,7 +150,7 @@ export default function AdminEventManagement() {
   const handleSave = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/admin/events/${selectedEvent._id}`, {
+      const response = await fetch(getApiUrl(`/api/admin/events/${selectedEvent._id}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -175,7 +176,7 @@ export default function AdminEventManagement() {
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/admin/events/${selectedEvent._id}`, {
+      const response = await fetch(getApiUrl(`/api/admin/events/${selectedEvent._id}`), {
         method: 'DELETE',
         headers: {
           'x-auth-token': token

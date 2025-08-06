@@ -6,6 +6,7 @@ import StarIcon from '@mui/icons-material/Star';
 import AdminLayout from './AdminLayout';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from 'recharts';
 import { getImageUrl, isValidImageUrl, handleImageError } from '../../utils/imageUtils';
+import { getApiUrl } from '../../utils/api';
 
 export default function AdminDashboard() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -19,7 +20,7 @@ export default function AdminDashboard() {
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/admin/dashboard', {
+      const response = await fetch(getApiUrl('/api/admin/dashboard'), {
         headers: {
           'x-auth-token': token
         }
