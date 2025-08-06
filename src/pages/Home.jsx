@@ -11,6 +11,12 @@ import { AuthContext } from '../context/AuthContext';
 const Home = () => {
   const { user } = useContext(AuthContext);
 
+  // Redirect admin users to admin dashboard
+  if (user && user.role === 'admin') {
+
+    return <Navigate to="/admin" />;
+  }
+
   if (!user) {
     return (
       <Box className="home-main">

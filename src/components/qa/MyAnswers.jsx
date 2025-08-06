@@ -1,108 +1,125 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, Paper, Chip, Stack, Button, Avatar } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
-import Header from '../common/Header';
-const demoAnswers = [
-  {
-    id: 1,
-    question: 'How do I prepare for final exams effectively?',
-    answer: 'I recommend making a revision timetable and practicing past papers. Focus on your weak areas and take regular breaks.',
-    tags: ['study', 'exam'],
-    date: '2024-06-02',
-    status: 'Accepted',
-  },
-  {
-    id: 2,
-    question: 'Where can I find affordable housing near campus?',
-    answer: 'Check out the university housing portal and local Facebook groups. Sometimes bulletin boards on campus have listings too.',
-    tags: ['housing', 'campus'],
-    date: '2024-05-29',
-    status: 'Pending',
-  },
-];
-
-const profile = {
-  name: 'Viraj S Parekh',
-  avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
-  totalAnswers: demoAnswers.length,
-  accepted: 1,
-  pending: 1,
-};
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
 export default function MyAnswers() {
+  const { token, user } = useAuth();
+  const navigate = useNavigate();
+  
+
+  const [answers, setAnswers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // Fetch user's answers
+  const fetchMyAnswers = async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      const response = await fetch('http://localhost:5001/api/qa/my-answers', {
+        headers: {
+          'x-auth-token': token
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch answers');
+      }
+
+      const data = await response.json();
+      setAnswers(data.answers);
+    } catch (err) {
+      console.error('Error fetching answers:', err);
+      setError('Failed to load your answers. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchMyAnswers();
+    }
+  }, [token]);
+
+  // Calculate profile stats
+  const profile = {
+    name: user?.name || 'User',
+    avatar: user?.name ? user.name.charAt(0).toUpperCase() : 'U',
+    totalAnswers: answers.length,
+    accepted: answers.filter(a => a.isAccepted).length,
+    pending: answers.filter(a => !a.isAccepted).length,
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <Typography>Loading...</Typography>
+      </Box>
+    );
+  }
+
   return (
-    <Box sx={{ background: 'var(--cb-bg, #F1F5F9)', minHeight: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', width: '100vw' }}>
-      <Header />
-    <Box sx={{ background: 'var(--cb-bg, #F1F5F9)', minHeight: '100vh', py: 6, px: 2, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', gap: 6, width: '100vw' }}>
-      {/* Main Content */}
-      <Box sx={{ width: '100%', maxWidth: 1000 }}>
+    <Box>
         <Typography variant="h4" fontWeight={700} color="#2563EB" mb={3}>
           My Answers
         </Typography>
-        {demoAnswers.length === 0 ? (
+        {answers.length === 0 ? (
           <Paper elevation={0} sx={{ p: 4, borderRadius: 3, textAlign: 'center', background: '#F1F5F9' }}>
             <Typography variant="h6" color="text.secondary">You haven't answered any questions yet.</Typography>
           </Paper>
         ) : (
           <Stack spacing={3}>
-            {demoAnswers.map(a => (
-              <Paper key={a.id} elevation={2} sx={{ p: 3, borderRadius: 3, display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'flex-start', justifyContent: 'space-between' }}>
+            {answers.map(a => (
+              <Paper key={a._id} elevation={2} sx={{ p: 3, borderRadius: 3, display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'flex-start', justifyContent: 'space-between' }}>
                 <Box sx={{ flex: 1, minWidth: 0 }}>
                   <Stack direction="row" alignItems="center" spacing={1} mb={1}>
-                    {a.status === 'Accepted' ? (
+                    {a.isAccepted ? (
                       <CheckCircleIcon color="success" fontSize="small" />
                     ) : (
                       <HourglassEmptyIcon color="warning" fontSize="small" />
                     )}
-                    <Typography variant="h6" fontWeight={700} color="#111827">{a.question}</Typography>
-                    <Chip
-                      label={a.status}
-                      color={a.status === 'Accepted' ? 'success' : 'warning'}
-                      size="small"
-                      sx={{ ml: 1, fontWeight: 600 }}
-                    />
+                    <Typography variant="h6" fontWeight={700} color="#111827">Answer to Question</Typography>
+                    {a.isAccepted && (
+                      <Chip
+                        label="Accepted"
+                        color="success"
+                        size="small"
+                        sx={{ ml: 1, fontWeight: 600 }}
+                      />
+                    )}
                   </Stack>
                   <Typography variant="body2" color="text.secondary" mb={1} sx={{ maxWidth: 700 }}>
-                    {a.answer}
+                    {a.answerText}
                   </Typography>
-                  <Stack direction="row" spacing={1} mb={1}>
-                    {a.tags.map(tag => <Chip key={tag} label={tag} color="primary" size="small" />)}
-                  </Stack>
                   <Typography variant="caption" color="text.secondary">
-                    Answered on {new Date(a.date).toLocaleDateString()}
+                    Answered on {new Date(a.createdAt).toLocaleDateString()}
                   </Typography>
                 </Box>
                 {/* Right status box */}
                 <Box sx={{ minWidth: 120, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1, justifyContent: 'flex-start', mt: 1 }}>
-                  {a.status === 'Accepted' ? (
+                  {/* Only show Accepted chip if accepted, otherwise nothing */}
+                  {a.isAccepted && (
                     <Chip label="Accepted" color="success" size="small" icon={<CheckCircleIcon />} sx={{ mt: 1 }} />
-                  ) : (
-                    <Chip label="Pending" color="warning" size="small" icon={<HourglassEmptyIcon />} sx={{ mt: 1 }} />
                   )}
-                  <Button variant="outlined" color="primary" size="small" sx={{ mt: 1 }}>View Question</Button>
+                  <Button 
+                    variant="outlined" 
+                    color="primary" 
+                    size="small" 
+                    sx={{ mt: 1 }}
+                    onClick={() => navigate(`/qa/question/${a.questionObjectId || a.questionId}`)}
+                  >
+                    View Question
+                  </Button>
                 </Box>
               </Paper>
             ))}
           </Stack>
         )}
-      </Box>
-      {/* Sidebar */}
-      <Box sx={{ minWidth: 260, maxWidth: 320, width: 320, ml: 2, alignSelf: 'flex-start' }}>
-        <Paper elevation={1} sx={{ p: 3, borderRadius: 3, mb: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Avatar src={profile.avatar} sx={{ width: 64, height: 64, mb: 1 }} />
-          <Typography fontWeight={700} mb={0.5}>{profile.name}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            Total Answers: <b>{profile.totalAnswers}</b>
-          </Typography>
-        </Paper>
-        <Paper elevation={0} sx={{ p: 3, borderRadius: 3, background: '#F1F5F9', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
-          <Typography fontWeight={600} color="success.main">Accepted: {profile.accepted}</Typography>
-          <Typography fontWeight={600} color="warning.main">Pending: {profile.pending}</Typography>
-          <Button variant="contained" color="primary" sx={{ mt: 2, borderRadius: 2 }} href="/profile">View Profile</Button>
-        </Paper>
-      </Box>
-    </Box>
     </Box>
   );
 } 

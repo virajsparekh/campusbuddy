@@ -39,8 +39,16 @@ const Signup = () => {
   const validate = () => {
     const errors = {};
     if (!form.name.trim()) errors.name = 'Name is required';
-    if (!form.email.trim()) errors.email = 'Email is required';
-    if (!form.password.trim()) errors.password = 'Password is required';
+    if (!form.email.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(form.email)) {
+      errors.email = 'Invalid email address';
+    }
+    if (!form.password.trim()) {
+      errors.password = 'Password is required';
+    } else if (form.password.length < 6) {
+      errors.password = 'Password must be at least 6 characters';
+    }
     if (!form.studentId.trim()) errors.studentId = 'Student ID is required';
     if (!form.college) errors.college = 'Please select your college';
     return errors;
@@ -75,10 +83,12 @@ const Signup = () => {
       });
       if (res.ok) {
         setSuccess('User created successfully! Redirecting to login...');
+        setError('');
         setTimeout(() => navigate('/login'), 1500);
       } else {
         const data = await res.json();
-        setError(data.msg || 'Signup failed');
+        setError(data.message || data.msg || 'Signup failed');
+        setSuccess('');
       }
     } catch (err) {
       setError('Signup failed');

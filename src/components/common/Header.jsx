@@ -52,7 +52,7 @@ const Header = () => {
       children: [
         { label: 'Browse Materials', to: '/studyhub/browse' },
         { label: 'Upload Materials', to: '/studyhub/upload' },
-        { label: 'My Uploads', to: '/studyhub/myuploads' },
+        { label: 'My Uploads', to: '/studyhub/my-uploads' },
       ],
       open: openStudyHub,
       setOpen: setOpenStudyHub,
@@ -62,7 +62,7 @@ const Header = () => {
       children: [
         { label: 'Browse Listings', to: '/marketplace' },
         { label: 'Post Listing', to: '/marketplace/post' },
-        { label: 'My Listings', to: '/marketplace/mylistings' },
+        { label: 'My Listings', to: '/marketplace/my-listings' },
       ],
       open: openMarketplace,
       setOpen: setOpenMarketplace,
@@ -73,8 +73,8 @@ const Header = () => {
       children: [
         { label: 'Browse Questions', to: '/qa/browse' },
         { label: 'Post Question', to: '/qa/ask' },
-        { label: 'My Questions', to: '/qa/myquestions' },
-        { label: 'My Answers', to: '/qa/myanswers' },
+        { label: 'My Questions', to: '/qa/my-questions' },
+        { label: 'My Answers', to: '/qa/my-answers' },
       ],
       open: openQA,
       setOpen: setOpenQA,
@@ -115,31 +115,27 @@ const Header = () => {
     );
   }
 
-  if (!user) {
-    return (
-      <AppBar position="static" color="inherit" elevation={1} sx={{ mb: 2, height: HEADER_HEIGHT }}>
-        <Toolbar sx={{ justifyContent: 'space-between', minHeight: HEADER_HEIGHT, height: HEADER_HEIGHT, px: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-            <RouterLink to="/" style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-              <CampusBuddyLogo style={{ height: '200px', width: '260px', margin: 0, padding: 2 }} />
-            </RouterLink>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button component={RouterLink} to="/login" color="primary" sx={{ fontWeight: 600, fontSize: 20 }}>
-              Login
-            </Button>
-            <Button component={RouterLink} to="/signup" color="primary" variant="outlined" sx={{ fontWeight: 600, fontSize: 20 }}>
-              Sign Up
-            </Button>
-          </Box>
-        </Toolbar>
-      </AppBar>
-    );
-  }
-
   return (
-    <AppBar position="static" color="inherit" elevation={1} sx={{ mb: 2, height: HEADER_HEIGHT }}>
-      <Toolbar sx={{ justifyContent: 'space-between', minHeight: HEADER_HEIGHT, height: HEADER_HEIGHT, px: 2 }}>
+    <AppBar 
+      position="static" 
+      color="inherit" 
+      elevation={1} 
+      sx={{ 
+        mb: 2, 
+        height: HEADER_HEIGHT, 
+        overflow: 'visible',
+        position: 'relative',
+        zIndex: 1000
+      }}
+    >
+      <Toolbar sx={{ 
+        justifyContent: 'space-between', 
+        minHeight: HEADER_HEIGHT, 
+        height: HEADER_HEIGHT, 
+        px: 2, 
+        overflow: 'visible',
+        position: 'relative'
+      }}>
         <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
           <RouterLink to="/" style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
             <CampusBuddyLogo style={{ height: '200px', width: '260px', margin: 0, padding: 2 }} />
@@ -156,14 +152,14 @@ const Header = () => {
                   {sidebarMenu.map((item, idx) =>
                     item.children ? (
                       <React.Fragment key={item.label}>
-                        <ListItem button onClick={e => { e.stopPropagation(); item.setOpen(!item.open); }}>
+                        <ListItem onClick={e => { e.stopPropagation(); item.setOpen(!item.open); }}>
                           <ListItemText primary={item.label} />
                           {item.open ? <ExpandLess /> : <ExpandMore />}
                         </ListItem>
                         <Collapse in={item.open} timeout="auto" unmountOnExit>
                           <List component="div" disablePadding>
                             {item.children.map(child => (
-                              <ListItem button key={child.label} component={RouterLink} to={child.to} sx={{ pl: 4 }}>
+                              <ListItem key={child.label} component={RouterLink} to={child.to} sx={{ pl: 4 }}>
                                 <ListItemText primary={child.label} />
                               </ListItem>
                             ))}
@@ -171,7 +167,7 @@ const Header = () => {
                         </Collapse>
                       </React.Fragment>
                     ) : (
-                      <ListItem button key={item.label} component={RouterLink} to={item.to}>
+                      <ListItem key={item.label} component={RouterLink} to={item.to}>
                         <ListItemText primary={item.label} />
                       </ListItem>
                     )
@@ -207,9 +203,20 @@ const Header = () => {
                 MenuListProps={{
                   onMouseLeave: () => setAnchorElStudyHub(null),
                   'aria-labelledby': 'studyhub-button',
+                  autoFocus: false,
                 }}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                disableScrollLock={true}
+                keepMounted={false}
+                disableAutoFocus={true}
+                disableEnforceFocus={true}
+                sx={{
+                  '& .MuiPaper-root': {
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                    border: '1px solid #e5e7eb'
+                  }
+                }}
               >
                 <MenuItem component={RouterLink} to="/studyhub/browse" onClick={() => setAnchorElStudyHub(null)}>
                   Browse Materials
@@ -217,7 +224,7 @@ const Header = () => {
                 <MenuItem component={RouterLink} to="/studyhub/upload" onClick={() => setAnchorElStudyHub(null)}>
                   Upload Materials
                 </MenuItem>
-                <MenuItem component={RouterLink} to="/studyhub/myuploads" onClick={() => setAnchorElStudyHub(null)}>
+                <MenuItem component={RouterLink} to="/studyhub/my-uploads" onClick={() => setAnchorElStudyHub(null)}>
                   My Uploads
                 </MenuItem>
               </Menu>
@@ -244,9 +251,14 @@ const Header = () => {
                 MenuListProps={{
                   onMouseLeave: () => setAnchorElMarketplace(null),
                   'aria-labelledby': 'marketplace-button',
+                  autoFocus: false,
                 }}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                disableScrollLock={true}
+                keepMounted={false}
+                disableAutoFocus={true}
+                disableEnforceFocus={true}
               >
                 <MenuItem component={RouterLink} to="/marketplace" onClick={() => setAnchorElMarketplace(null)}>
                   Browse Listings
@@ -254,7 +266,7 @@ const Header = () => {
                 <MenuItem component={RouterLink} to="/marketplace/post" onClick={() => setAnchorElMarketplace(null)}>
                   Post Listing
                 </MenuItem>
-                <MenuItem component={RouterLink} to="/marketplace/mylistings" onClick={() => setAnchorElMarketplace(null)}>
+                <MenuItem component={RouterLink} to="/marketplace/my-listings" onClick={() => setAnchorElMarketplace(null)}>
                   My Listings
                 </MenuItem>
               </Menu>
@@ -302,9 +314,14 @@ const Header = () => {
                 MenuListProps={{
                   onMouseLeave: () => setAnchorElQA(null),
                   'aria-labelledby': 'qa-button',
+                  autoFocus: false,
                 }}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                disableScrollLock={true}
+                keepMounted={false}
+                disableAutoFocus={true}
+                disableEnforceFocus={true}
               >
                 <MenuItem component={RouterLink} to="/qa/browse" onClick={() => setAnchorElQA(null)}>
                   Browse Questions
@@ -312,10 +329,10 @@ const Header = () => {
                 <MenuItem component={RouterLink} to="/qa/ask" onClick={() => setAnchorElQA(null)}>
                   Post Question
                 </MenuItem>
-                <MenuItem component={RouterLink} to="/qa/myquestions" onClick={() => setAnchorElQA(null)}>
+                <MenuItem component={RouterLink} to="/qa/my-questions" onClick={() => setAnchorElQA(null)}>
                   My Questions
                 </MenuItem>
-                <MenuItem component={RouterLink} to="/qa/myanswers" onClick={() => setAnchorElQA(null)}>
+                <MenuItem component={RouterLink} to="/qa/my-answers" onClick={() => setAnchorElQA(null)}>
                   My Answers
                 </MenuItem>
               </Menu>
@@ -342,9 +359,14 @@ const Header = () => {
                 MenuListProps={{
                   onMouseLeave: () => setAnchorElSupport(null),
                   'aria-labelledby': 'support-button',
+                  autoFocus: false,
                 }}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                disableScrollLock={true}
+                keepMounted={false}
+                disableAutoFocus={true}
+                disableEnforceFocus={true}
               >
                 <MenuItem component={RouterLink} to="/support/help" onClick={() => setAnchorElSupport(null)}>
                   Help Center
@@ -382,15 +404,20 @@ const Header = () => {
                 MenuListProps={{
                   onMouseLeave: handleMouseLeave,
                   'aria-labelledby': 'account-button',
+                  autoFocus: false,
                 }}
                 anchorOrigin={{
                   vertical: 'bottom',
-                  horizontal: 'right',
+                  horizontal: 'left',
                 }}
                 transformOrigin={{
                   vertical: 'top',
-                  horizontal: 'right',
+                  horizontal: 'left',
                 }}
+                disableScrollLock={true}
+                keepMounted={false}
+                disableAutoFocus={true}
+                disableEnforceFocus={true}
               >
                 <MenuItem component={RouterLink} to="/profile" onClick={handleMouseLeave}>
                   My Profile

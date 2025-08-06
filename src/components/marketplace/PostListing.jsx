@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, TextField, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, MenuItem, Select, InputLabel, Paper, Avatar, Switch } from '@mui/material';
+import { Box, Typography, Button, TextField, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, MenuItem, Select, InputLabel, Paper, Avatar, Switch, Alert, CircularProgress } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { useNavigate } from 'react-router-dom';
 import Header from '../common/Header';
+import { useAuth } from '../../context/AuthContext';
 
 const categories = ['Electronics', 'Books', 'Furniture', 'Other'];
 const amenities = ['WiFi', 'Furnished', 'Meals Included', 'Laundry', 'Parking'];
-const isPremiumUser = true; // Simulate premium user
+const isPremiumUser = true; 
 
 export default function PostListing() {
+  const { user, token } = useAuth();
+  const navigate = useNavigate();
   const [type, setType] = useState('item');
   const [form, setForm] = useState({
     title: '',
     description: '',
     price: '',
     category: '',
-    image: '',
+    condition: 'Used',
+    contactInfo: '',
+    imageUrl: '',
     location: '',
     rent: '',
     amenities: [],
@@ -22,6 +28,9 @@ export default function PostListing() {
   });
   const [imagePreview, setImagePreview] = useState('');
   const [priority, setPriority] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleChange = (field) => (e) => {
     setForm({ ...form, [field]: e.target.value });
@@ -47,9 +56,57 @@ export default function PostListing() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Demo submit: ' + JSON.stringify({ type, ...form }, null, 2));
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const endpoint = type === 'item' ? '/api/marketplace/listings' : '/api/marketplace/accommodations';
+      const payload = type === 'item' ? {
+        title: form.title,
+        description: form.description,
+        price: form.price,
+        category: form.category,
+        condition: form.condition,
+        contactInfo: form.contactInfo || user.email,
+        imageUrl: form.imageUrl || imagePreview
+      } : {
+        location: form.address,
+        rent: form.rent,
+        details: form.description,
+        contactInfo: form.contactInfo || user.email,
+        imageUrl: form.imageUrl || imagePreview
+      };
+
+      const response = await fetch(`http://localhost:5001${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create listing');
+      }
+
+      const data = await response.json();
+      setSuccess('Listing created successfully!');
+      
+      // Redirect to my listings after a short delay
+      setTimeout(() => {
+        navigate('/marketplace/my-listings');
+      }, 1500);
+    } catch (err) {
+      console.error('Error creating listing:', err);
+      setError(err.message || 'Failed to create listing. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -77,6 +134,19 @@ export default function PostListing() {
               sx={{ mb: 2 }}
             />
           )}
+          
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+          
+          {success && (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              {success}
+            </Alert>
+          )}
+          
           <form onSubmit={handleSubmit} style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
             <Box sx={{ flex: '1 1 auto', minHeight: 0, pb: 2 }}>
               <Button
@@ -96,6 +166,8 @@ export default function PostListing() {
               )}
               <TextField label="Title" value={form.title} onChange={handleChange('title')} fullWidth required variant="outlined" sx={{ mb: 2 }} />
               <TextField label="Description" value={form.description} onChange={handleChange('description')} fullWidth multiline minRows={3} variant="outlined" sx={{ mb: 2 }} />
+              <TextField label="Contact Info (Phone/Email)" value={form.contactInfo} onChange={handleChange('contactInfo')} fullWidth variant="outlined" sx={{ mb: 2 }} placeholder={user?.email || "Enter contact information"} />
+              <TextField label="Image URL (optional)" value={form.imageUrl} onChange={handleChange('imageUrl')} fullWidth variant="outlined" sx={{ mb: 2 }} placeholder="https://example.com/image.jpg" />
               {type === 'item' ? (
                 <>
                   <TextField label="Price ($)" value={form.price} onChange={handleChange('price')} fullWidth required type="number" variant="outlined" sx={{ mb: 2 }} />
@@ -104,6 +176,14 @@ export default function PostListing() {
                     <Select value={form.category} label="Category" onChange={handleChange('category')} required>
                       <MenuItem value=""><em>Select Category</em></MenuItem>
                       {categories.map(cat => <MenuItem key={cat} value={cat}>{cat}</MenuItem>)}
+                    </Select>
+                  </FormControl>
+                  <FormControl fullWidth sx={{ mb: 2 }}>
+                    <InputLabel>Condition</InputLabel>
+                    <Select value={form.condition} label="Condition" onChange={handleChange('condition')} required>
+                      <MenuItem value="New">New</MenuItem>
+                      <MenuItem value="Used">Used</MenuItem>
+                      <MenuItem value="Like New">Like New</MenuItem>
                     </Select>
                   </FormControl>
                   <TextField label="Location" value={form.location} onChange={handleChange('location')} fullWidth variant="outlined" sx={{ mb: 2 }} />
@@ -128,8 +208,14 @@ export default function PostListing() {
               )}
             </Box>
             <Box>
-              <Button type="submit" variant="contained" fullWidth sx={{ fontWeight: 700, fontSize: 16, py: 1.2, borderRadius: 2, background: '#2563EB', boxShadow: '0 2px 8px 0 rgba(37,99,235,0.10)', '&:hover': { background: '#1e40af' } }}>
-                Post Listing
+              <Button 
+                type="submit" 
+                variant="contained" 
+                fullWidth 
+                disabled={loading}
+                sx={{ fontWeight: 700, fontSize: 16, py: 1.2, borderRadius: 2, background: '#2563EB', boxShadow: '0 2px 8px 0 rgba(37,99,235,0.10)', '&:hover': { background: '#1e40af' } }}
+              >
+                {loading ? <CircularProgress size={20} color="inherit" /> : 'Post Listing'}
               </Button>
             </Box>
           </form>
@@ -179,9 +265,11 @@ export default function PostListing() {
                 Seller information
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Avatar src="https://randomuser.me/api/portraits/men/75.jpg" sx={{ width: 40, height: 40 }} />
+                <Avatar sx={{ width: 40, height: 40, bgcolor: 'primary.main' }}>
+                  {user?.name?.charAt(0) || 'U'}
+                </Avatar>
                 <Box>
-                  <Typography fontWeight={600} color="text.primary">Viraj S Parekh</Typography>
+                  <Typography fontWeight={600} color="text.primary">{user?.name || 'User'}</Typography>
                   <Typography fontSize={13} color="text.secondary">Listing to Marketplace • Public</Typography>
                 </Box>
               </Box>
